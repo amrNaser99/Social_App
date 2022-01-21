@@ -5,6 +5,10 @@ class PostScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text('PostScreen');
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Posts'),
+      ),
+    );
   }
 }

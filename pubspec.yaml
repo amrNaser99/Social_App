@@ -1,4 +1,4 @@
-name: social_app
+name: socialApp
 description: A new Social Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -31,8 +31,6 @@ dependencies:
     sdk: flutter
 
 
-
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -50,8 +48,10 @@ dependencies:
   firebase_core: ^1.11.0
   firebase_auth: ^3.3.5
   cloud_firestore: ^3.1.6
+  image_picker: ^0.8.4+4
+  firebase_storage: ^10.2.5
 
-  #cloud_firestore: ^1.0.4
+
 
 
 dev_dependencies:
@@ -99,7 +99,7 @@ flutter:
     - family: janna
       fonts:
         - asset: assets/fonts/janna.ttf
-    - family: Iconly-Broken
+    - family: IconBroken
       fonts:
         - asset: assets/fonts/icons.ttf
 

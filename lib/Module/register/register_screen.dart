@@ -1,12 +1,12 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/Module/login/social_login_screen.dart';
-import 'package:social_app/Module/register/register_cubit/register_cubit.dart';
-import 'package:social_app/Module/register/register_cubit/register_states.dart';
-import 'package:social_app/layout/social_layout.dart';
-import 'package:social_app/shared/components/components.dart';
-import 'package:social_app/shared/styles/colors.dart';
+import 'package:socialApp/Module/login/social_login_screen.dart';
+import 'package:socialApp/Module/register/register_cubit/social_register_cubit.dart';
+import 'package:socialApp/Module/register/register_cubit/social_register_states.dart';
+import 'package:socialApp/layout/social_layout.dart';
+import 'package:socialApp/shared/components/components.dart';
+import 'package:socialApp/shared/styles/colors.dart';
 
 class SocialRegisterScreen extends StatefulWidget {
   const SocialRegisterScreen({Key? key}) : super(key: key);
@@ -28,18 +28,17 @@ class _SocialRegisterScreenState extends State<SocialRegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => RegisterCubit(),
-      child: BlocConsumer<RegisterCubit, RegisterStates>(
+      create: (BuildContext context) => SocialRegisterCubit(),
+      child: BlocConsumer<SocialRegisterCubit, SocialRegisterStates>(
         listener: (context, state) {
-          if(state is SocialRegisterErrorStates) {
+          if (state is SocialRegisterErrorStates) {
             print(state.error.toString());
             showToast(message: state.error);
           }
-          if(state is SocialCreateUserSuccessStates) {
+          if (state is SocialCreateUserSuccessStates) {
             NavigateAndFinish(context, const SocialLayout());
             showToast(message: 'Register Done Successfully');
           }
-
         },
         builder: (context, state) {
           return Scaffold(
@@ -53,36 +52,27 @@ class _SocialRegisterScreenState extends State<SocialRegisterScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'SIGN UP',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headline4
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: primaryColor),
-                                  ),
-                                  Text(
-                                    'Register Now To Have an Account',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1
-                                        ?.copyWith(
-                                          color: colorGreyDark,
-                                        ),
-                                  ),
-                                ],
+                              Text(
+                                'SIGN UP',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline4
+                                    ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: primaryColor),
                               ),
-                              const Spacer(),
-                              const Image(
-                                image: AssetImage('assets/images/logo.png'),
-                                width: 100,
-                                height: 100,
+                              Text(
+                                'Register Now To Have an Account',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    ?.copyWith(
+                                      color: colorGreyDark,
+                                  fontSize: 14.0,
+                                    ),
                               ),
                             ],
                           ),
@@ -189,7 +179,7 @@ class _SocialRegisterScreenState extends State<SocialRegisterScreen> {
                                 if (formKey.currentState!.validate()) {
                                   //TODO link to api and register
 
-                                  RegisterCubit.get(context).userRegister(
+                                  SocialRegisterCubit.get(context).userRegister(
                                     userName: userNameController.text,
                                     email: emailController.text,
                                     phone: phoneController?.text,

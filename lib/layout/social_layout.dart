@@ -1,50 +1,76 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:social_app/shared/cubit/social_cubit.dart';
+import 'package:socialApp/Module/nav_bar/post/post_screen.dart';
+import 'package:socialApp/shared/components/components.dart';
+import 'package:socialApp/shared/cubit/social_cubit.dart';
+import 'package:socialApp/shared/cubit/social_states.dart';
+import 'package:socialApp/shared/styles/icon_broken.dart';
 
 class SocialLayout extends StatelessWidget {
   const SocialLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => SocialCubit(),
-      child: BlocConsumer(
-        listener: (BuildContext context, state) {},
-        builder: (BuildContext context, Object? state) {
-          SocialCubit cubit = BlocProvider.of(context);
-          return Scaffold(
-            appBar: AppBar(),
-            body: cubit.screens[cubit.currentIndex],
-            bottomNavigationBar: BottomNavigationBar(
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.error),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.chat),
-                  label: 'Chats',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.location_history),
-                  label: 'Users',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'Settings',
-                ),
-              ],
-              currentIndex: cubit.currentIndex,
-              onTap: (index)
-              {
-                cubit.changeNavItems(index);
-              },
-
+    return BlocConsumer<SocialCubit, SocialStates>(
+      listener: (BuildContext context, state) {
+        if(state is SocialNewPostState)
+        {
+          NavigateTo(context, const PostScreen());
+        }
+      },
+      builder: (BuildContext context, state) {
+        SocialCubit cubit = BlocProvider.of(context);
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(
+              cubit.appBarTitles[cubit.currentIndex],
             ),
-          );
-        },
-      ),
+            actions: [
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  IconBroken.Notification,
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  IconBroken.Search,
+                ),
+              ),
+            ],
+          ),
+          body: cubit.screens[cubit.currentIndex],
+          bottomNavigationBar: BottomNavigationBar(
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(IconBroken.Home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(IconBroken.Chat),
+                label: 'Chats',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(IconBroken.Upload),
+                label: 'Post',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(IconBroken.Location),
+                label: 'Users',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(IconBroken.Setting),
+                label: 'Settings',
+              ),
+            ],
+            currentIndex: SocialCubit.get(context).currentIndex,
+            onTap: (index) {
+              SocialCubit.get(context).changeNavItems(index);
+            },
+          ),
+        );
+      },
     );
   }
 }

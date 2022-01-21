@@ -1,58 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
+import 'package:socialApp/shared/styles/colors.dart';
 
-import 'colors.dart';
 ThemeData lightMode = ThemeData(
-
-  scaffoldBackgroundColor: Colors.white,
-  primaryColor: primaryColor,
-  primarySwatch: Colors.deepPurple,
-  // Colors.blueGrey,
-
-  appBarTheme: const AppBarTheme(
-    centerTitle: false,
-    titleSpacing: 20.0,
-    backgroundColor: Colors.white,
-    titleTextStyle: TextStyle(
-      color: Colors.black,
-      fontWeight: FontWeight.w600
-
+    primarySwatch: primaryColor,
+    primaryColor: primaryColor,
+    scaffoldBackgroundColor: w,
+    appBarTheme: const AppBarTheme(
+      titleSpacing: 20.0,
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      iconTheme: IconThemeData(
+        color: Colors.black,
+      ),
+      titleTextStyle: TextStyle(
+        color: Colors.black,
+        fontSize: 20.0,
+        fontWeight: FontWeight.w500,
+      ),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.white,
+        statusBarIconBrightness: Brightness.dark,
+      ),
     ),
-    iconTheme: IconThemeData(color: Colors.black),
-    elevation: 0.0,
-    systemOverlayStyle:  SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      // type: BottomNavigationBarType.fixed,
+      selectedItemColor: mainColor,
+      unselectedItemColor: Colors.grey,
+      elevation: 20.0,
+      backgroundColor: Colors.white,
     ),
-  ),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    unselectedItemColor: Colors.grey,
-    selectedItemColor: primaryColor,
-    elevation: 50.0,
-  ),
-  backgroundColor: Colors.white,
-  fontFamily: 'janna',
-);
+    textTheme: const TextTheme(
+      bodyText1: TextStyle(
+          fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.black),
+      subtitle2: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.w600,
+      )
+    ),
+    fontFamily: 'janna');
+
+
+
 ThemeData darkMode = ThemeData(
-  scaffoldBackgroundColor: Colors.white,
-  primarySwatch: Colors.deepPurple ,
-  // Colors.blueGrey,
+  primarySwatch: primaryColor,
+  primaryColor: primaryColor,
   appBarTheme: const AppBarTheme(
-    centerTitle: true,
-    backgroundColor: Colors.white,
-    iconTheme: IconThemeData(color: Colors.black),
+    titleSpacing: 20.0,
     elevation: 0.0,
-
-
-    systemOverlayStyle:  SystemUiOverlayStyle(
+    backgroundColor: Colors.transparent,
+    iconTheme: IconThemeData(
+      color: Colors.white,
+    ),
+    titleTextStyle: TextStyle(
+      color: Colors.white,
+      fontSize: 25.0,
+      fontWeight: FontWeight.bold,
+    ),
+    systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ),),
-  bottomNavigationBarTheme: BottomNavigationBarThemeData(
-    unselectedItemColor: Colors.grey,
-    selectedItemColor: primaryColor,
+      statusBarIconBrightness: Brightness.light,
+    ),
   ),
-  backgroundColor: Colors.white,
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    type: BottomNavigationBarType.fixed,
+    elevation: 20.0,
+    selectedItemColor: primaryColor,
+    unselectedItemColor: Colors.grey,
+    backgroundColor: HexColor('333739'),
+  ),
+  scaffoldBackgroundColor: HexColor('333739'),
+  textTheme: const TextTheme(
+    bodyText1: TextStyle(
+        fontSize: 20.0, fontWeight: FontWeight.w600, color: Colors.white),
+  ),
   fontFamily: 'janna',
-
 );

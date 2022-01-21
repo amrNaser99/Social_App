@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:social_app/shared/styles/colors.dart';
+import 'package:socialApp/shared/styles/colors.dart';
+import 'package:socialApp/shared/styles/icon_broken.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -11,6 +12,7 @@ Widget defaultButton({
 }) =>
     Container(
       width: width,
+      height: 40.0,
       child: MaterialButton(
         child: Text(
           isUpperCase ? text.toUpperCase() : text,
@@ -39,7 +41,7 @@ void NavigateAndFinish(context, Widget) => Navigator.pushAndRemoveUntil(
 Widget defaultTextFormField({
   required TextEditingController controller,
   required TextInputType keyboardType,
-  String? labelText,
+  required String? labelText,
   String? hintText,
   required IconData prefixIcon,
   FormFieldValidator<String>? validate,
@@ -97,6 +99,24 @@ void showToast({
       textColor: Colors.white,
       fontSize: 16.0);
 }
+
+PreferredSizeWidget defaultAppBar({
+  required BuildContext context,
+  String? title,
+  List<Widget>? actions,
+}) =>
+     AppBar(
+      leading: IconButton(
+        icon: const Icon(IconBroken.Arrow___Left_2),
+        onPressed: ()
+        {
+          Navigator.pop(context);
+        },
+      ),
+      titleSpacing: 5.0,
+      title: Text(title!),
+      actions: actions,
+    );
 
 Widget buildListSItem(data, context, index) => Padding(
       padding: const EdgeInsets.all(20.0),

@@ -1,7 +1,6 @@
-
 abstract class SocialLoginStates {}
 
-class SocialLoginInitialStates extends SocialLoginStates {}
+class SocialLoginInitialState extends SocialLoginStates {}
 
 class SocialLoginLoadingStates extends SocialLoginStates {}
 
@@ -26,5 +25,20 @@ class SocialRegisterErrorStates extends SocialLoginStates {
 }
 
 class SocialLoginSuccessStates extends SocialLoginStates {
+  final String uId ;
+
+  SocialLoginSuccessStates(this.uId);
+
+}
+
+class SocialRegisterInitialStates extends SocialLoginStates {}
+
+
+class SocialCreateUserSuccessStates extends SocialLoginStates {}
+
+class SocialCreateUserErrorStates extends SocialLoginStates {
+  final String error;
+
+  SocialCreateUserErrorStates(this.error);
 
 }

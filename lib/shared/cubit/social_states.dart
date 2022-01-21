@@ -1,56 +1,28 @@
 abstract class SocialStates {}
 
 
-class SocialInitialStateState extends SocialStates{}
+class SocialInitialState extends SocialStates{}
 
 class SocialChangeNavBarState extends SocialStates{}
+class SocialNewPostState extends SocialStates{}
 
 
-class SocialLoadingHomeDataState extends SocialStates{}
-class SocialHomeDataSuccessState extends SocialStates{}
-class SocialHomeDataErrorState extends SocialStates{
-  final String error;
-  SocialHomeDataErrorState(this.error);
-}
+class SocialGetUserDataLoadingStates extends SocialStates {}
 
-class SocialLoadingCategoriesState extends SocialStates{}
-class SocialCategoriesSuccessState extends SocialStates{}
-class SocialCategoriesErrorState extends SocialStates{
-  final String error;
-  SocialCategoriesErrorState(this.error);
-}
-class SocialChangeFavouriteSuccessState extends SocialStates{
+
+
+class SocialGetUserDataSuccessStates extends SocialStates {
 
 }
-class SocialChangeFavouriteErrorState extends SocialStates{
+
+class SocialGetUserDataErrorStates extends SocialStates {
   final String error;
 
-  SocialChangeFavouriteErrorState(this.error);
+  SocialGetUserDataErrorStates(this.error);
 }
-class SocialLoadingFavouriteState extends SocialStates{}
+class SocialProfileImageSuccessStates extends SocialStates {}
 
-class SocialFavouriteSuccessState extends SocialStates{
-}
-class SocialGetFavouritesSuccessState extends SocialStates{
+class SocialProfileImageErrorStates extends SocialStates {}
+class SocialCoverImageSuccessStates extends SocialStates {}
 
-}
-
-class SocialGetFavouritesErrorState extends SocialStates{
-  final String error;
-
-  SocialGetFavouritesErrorState(this.error);
-}
-
-class SocialLoadingUserDataState extends SocialStates{}
-
-class SocialUserDataSuccessState extends SocialStates{
-
-
-}
-class SocialUserDataErrorState extends SocialStates{
-  final String error;
-
-  SocialUserDataErrorState(this.error);
-
-}
-
+class SocialCoverImageErrorStates extends SocialStates {}
