@@ -9,18 +9,20 @@ import 'package:socialApp/shared/styles/icon_broken.dart';
 class SocialLayout extends StatelessWidget {
   const SocialLayout({Key? key}) : super(key: key);
 
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (BuildContext context, state) {
         if(state is SocialNewPostState)
         {
-          NavigateTo(context, const PostScreen());
+          NavigateTo(context, PostScreen());
         }
       },
       builder: (BuildContext context, state) {
         SocialCubit cubit = BlocProvider.of(context);
         return Scaffold(
+
           appBar: AppBar(
             title: Text(
               cubit.appBarTitles[cubit.currentIndex],

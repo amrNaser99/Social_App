@@ -1,13 +1,17 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:socialApp/model/post_model.dart';
 import 'package:socialApp/shared/cubit/social_cubit.dart';
 import 'package:socialApp/shared/cubit/social_states.dart';
 import 'package:socialApp/shared/styles/colors.dart';
 import 'package:socialApp/shared/styles/icon_broken.dart';
 
 class FeedsScreen extends StatelessWidget {
-  const FeedsScreen({Key? key}) : super(key: key);
+  FeedsScreen({Key? key}) : super(key: key);
+
+  var commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -15,13 +19,14 @@ class FeedsScreen extends StatelessWidget {
       listener: (BuildContext context, state) {},
       builder: (BuildContext context, state) {
         return ConditionalBuilder(
-          condition: SocialCubit.get(context).userModel != null,
+          condition: SocialCubit.get(context).posts.isNotEmpty &&
+              SocialCubit.get(context).userModel != null,
           builder: (context) {
             //TODO Email Verification
-
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Card(
                     clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -56,13 +61,17 @@ class FeedsScreen extends StatelessWidget {
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) => buildPostItem(
                       context,
+                      SocialCubit.get(context).posts[index],
+                      index,
                     ),
                     separatorBuilder: (context, index) => const SizedBox(
                       height: 8.0,
                     ),
-                    itemCount: 10,
+                    itemCount: SocialCubit.get(context).posts.length,
                   ),
-                  const SizedBox(height: 8.0,),
+                  const SizedBox(
+                    height: 8.0,
+                  ),
                 ],
               ),
             );
@@ -74,7 +83,7 @@ class FeedsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPostItem(context) => Card(
+  Widget buildPostItem(context, PostModel model, index) => Card(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         elevation: 5.0,
         margin: const EdgeInsets.symmetric(
@@ -83,13 +92,14 @@ class FeedsScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 25.0,
                     backgroundImage: NetworkImage(
-                      'https://media.istockphoto.com/photos/close-up-photo-beautiful-amazing-she-her-dark-skin-lady-hands-arms-picture-id1132928286?k=20&m=1132928286&s=612x612&w=0&h=ROgLQIt_7-1eYDot8mDP_Zp773P33NlJKftyyLbtnAk=',
+                      '${model.image}',
                     ),
                   ),
                   const SizedBox(
@@ -102,7 +112,7 @@ class FeedsScreen extends StatelessWidget {
                         Row(
                           children: [
                             Text(
-                              'Amr Nasser',
+                              '${model.userName}',
                               style: Theme.of(context)
                                   .textTheme
                                   .subtitle1!
@@ -114,7 +124,7 @@ class FeedsScreen extends StatelessWidget {
                             const SizedBox(
                               width: 5,
                             ),
-                             Icon(
+                            Icon(
                               Icons.check_circle,
                               color: mainColor,
                               size: 16.0,
@@ -122,9 +132,8 @@ class FeedsScreen extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          'January 21, 2022 at 10 pm',
-                          style: Theme.of(context).textTheme.caption!
-                              .copyWith(
+                          '${model.dateTime}',
+                          style: Theme.of(context).textTheme.caption!.copyWith(
                                 height: 1.4,
                               ),
                         ),
@@ -153,189 +162,115 @@ class FeedsScreen extends StatelessWidget {
                   color: Colors.grey[300],
                 ),
               ),
-
               //Text Body
-              Text(
-                'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    fontSize: 14.0,
-                    height: 1.3,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Container(
-                  width: double.infinity,
-                  child: Wrap(
-                    children: [
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#mobile_developmemt ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#Flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 25.0,
-                        child: MaterialButton(
-                          onPressed: () {},
-                          minWidth: 1.0,
-                          padding: EdgeInsets.zero,
-                          child: const Text(
-                            '#flutter ',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+              if (model.text != null)
+                const SizedBox(
+                  height: 5,
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                height: 140.0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4.0),
-                  image: const DecorationImage(
-                    image: NetworkImage(
-                      'https://media.istockphoto.com/photos/close-up-photo-beautiful-amazing-she-her-dark-skin-lady-hands-arms-picture-id1132928286?k=20&m=1132928286&s=612x612&w=0&h=ROgLQIt_7-1eYDot8mDP_Zp773P33NlJKftyyLbtnAk=',
+              if (model.text != null)
+                Text(
+                  '${model.text}',
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      fontSize: 14.0,
+                      height: 1.3,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black),
+                ),
+              // const SizedBox(height: 15.0,),
+              // Tags
+              // Padding(
+              //   padding: const EdgeInsetsDirectional.only(top: 5.0),
+              //   child: Container(
+              //     width: double.infinity,
+              //     child: Wrap(
+              //       children: [
+              //         Container(
+              //           height: 25.0,
+              //           child: MaterialButton(
+              //             onPressed: () {},
+              //             minWidth: 1.0,
+              //             padding: EdgeInsets.zero,
+              //             child: const Text(
+              //               '#mobile_developmemt ',
+              //               style: TextStyle(
+              //                 color: Colors.blue,
+              //                 fontWeight: FontWeight.w600,
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //         Container(
+              //           height: 25.0,
+              //           child: MaterialButton(
+              //             onPressed: () {},
+              //             minWidth: 1.0,
+              //             padding: EdgeInsets.zero,
+              //             child: const Text(
+              //               '#Flutter ',
+              //               style: TextStyle(
+              //                 color: Colors.blue,
+              //                 fontWeight: FontWeight.w600,
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //         Container(
+              //           height: 25.0,
+              //           child: MaterialButton(
+              //             onPressed: () {},
+              //             minWidth: 1.0,
+              //             padding: EdgeInsets.zero,
+              //             child: const Text(
+              //               '#flutter ',
+              //               style: TextStyle(
+              //                 color: Colors.blue,
+              //                 fontWeight: FontWeight.w600,
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //         Container(
+              //           height: 25.0,
+              //           child: MaterialButton(
+              //             onPressed: () {},
+              //             minWidth: 1.0,
+              //             padding: EdgeInsets.zero,
+              //             child: const Text(
+              //               '#flutter ',
+              //               style: TextStyle(
+              //                 color: Colors.blue,
+              //                 fontWeight: FontWeight.w600,
+              //               ),
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+
+              // post Image
+              if (model.postImage != "")
+                Padding(
+                  padding: const EdgeInsetsDirectional.only(
+                    top: 10.0,
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    height: 140.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.0),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          '${model.postImage}',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    fit: BoxFit.cover,
                   ),
                 ),
-              ),
+
+              // emojies bar
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 5.0),
                 child: Row(
@@ -357,7 +292,7 @@ class FeedsScreen extends StatelessWidget {
                                 width: 5.0,
                               ),
                               Text(
-                                '1200',
+                                '${SocialCubit.get(context).likes[index]}',
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ],
@@ -384,7 +319,8 @@ class FeedsScreen extends StatelessWidget {
                                 width: 5.0,
                               ),
                               Text(
-                                '536 Comments',
+                                //TODO
+                                '${SocialCubit.get(context).comments[index]} Comments',
                                 style: Theme.of(context).textTheme.caption,
                               ),
                             ],
@@ -408,6 +344,7 @@ class FeedsScreen extends StatelessWidget {
               ),
               Row(
                 children: [
+                  //comment
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(
@@ -416,25 +353,47 @@ class FeedsScreen extends StatelessWidget {
                       child: InkWell(
                         child: Row(
                           children: [
-                            const CircleAvatar(
+                            CircleAvatar(
                               radius: 18.0,
                               backgroundImage: NetworkImage(
-                                'https://media.istockphoto.com/photos/close-up-photo-beautiful-amazing-she-her-dark-skin-lady-hands-arms-picture-id1132928286?k=20&m=1132928286&s=612x612&w=0&h=ROgLQIt_7-1eYDot8mDP_Zp773P33NlJKftyyLbtnAk=',
+                                '${SocialCubit.get(context).userModel!.image}',
                               ),
                             ),
                             const SizedBox(
                               width: 15,
                             ),
-                            Text(
-                              'Write a comment...',
-                              style:
-                                  Theme.of(context).textTheme.caption!.copyWith(
-                                        height: 1.4,
-                                      ),
+                            // Text(
+                            //   'Write a comment...',
+                            //   style:
+                            //       Theme.of(context).textTheme.caption!.copyWith(
+                            //             height: 1.4,
+                            //           ),
+                            // ),
+                            Expanded(
+                              child: Container(
+                                height: 30.0,
+                                child: TextFormField(
+                                  controller: commentController,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Write a comment...',
+                                    hintStyle:
+                                        Theme.of(context).textTheme.caption,
+                                  ),
+                                  onFieldSubmitted: (String value) {
+                                    SocialCubit.get(context).commentPost(
+                                        SocialCubit.get(context).postsId[index],
+                                        commentController.text);
+                                    SocialCubit.get(context).getDataUser();
+                                  },
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          //TODO
+                        },
                       ),
                     ),
                   ),
@@ -458,31 +417,11 @@ class FeedsScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      SocialCubit.get(context)
+                          .likePost(SocialCubit.get(context).postsId[index]);
+                    },
                   ),
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            IconBroken.More_Circle,
-                            size: 20,
-                            color: Colors.indigo ,
-                          ),
-                          const SizedBox(
-                            width: 5.0,
-                          ),
-                          Text(
-                            'Comment',
-                            style: Theme.of(context).textTheme.caption,
-                          ),
-                        ],
-                      ),
-                    ),
-                    onTap: () {},
-                  )
                 ],
               ),
             ],

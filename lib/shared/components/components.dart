@@ -5,7 +5,7 @@ import 'package:socialApp/shared/styles/icon_broken.dart';
 
 Widget defaultButton({
   double width = double.infinity,
-  required Color color,
+  Color? color,
   required String text,
   required void Function() function,
   bool isUpperCase = true,
