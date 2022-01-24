@@ -205,3 +205,14 @@ Widget buildListSItem(data, context, index) => Padding(
         ),
       ),
     );
+
+Widget myDivider() => Padding(
+  padding: const EdgeInsets.symmetric(
+    horizontal: 15.0,
+  ),
+  child: Container(
+    width: double.infinity,
+    height: 1.0,
+    color: Colors.grey[300],
+  ),
+);

@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +23,7 @@ class SocialCubit extends Cubit<SocialStates> {
   UserModel? userModel;
 
   void getDataUser() {
+    emit(SocialGetUserDataLoadingStates());
     FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
       print(value.data());
 
@@ -44,6 +46,9 @@ class SocialCubit extends Cubit<SocialStates> {
   ];
 
   void changeNavItems(int index) {
+    if (index == 1) {
+      getAllUsers();
+    }
     if (index == 2) {
       emit(SocialNewPostState());
     } else {
@@ -222,7 +227,6 @@ class SocialCubit extends Cubit<SocialStates> {
                   text: text,
                   postImage: value,
                 );
-
                 emit(SocialCreatePostSuccessStates());
               }).catchError((error) {
                 emit(SocialCreatePostErrorStates());
@@ -270,14 +274,16 @@ class SocialCubit extends Cubit<SocialStates> {
 
   void getPosts() {
     emit(SocialGetPostsDataLoadingStates());
+
     FirebaseFirestore.instance.collection('posts').get().then((value) {
       emit(SocialLikePostsLoadingStates());
-      value.docs.forEach((element) {
 
+      value.docs.forEach((element) {
         element.reference.collection('likes').get().then((value) {
           likes.add(value.docs.length);
           postsId.add(element.id);
           posts.add(PostModel.fromJson(element.data()));
+
           emit(SocialLikePostsSuccessStates());
         }).catchError((error) {
           emit(SocialLikePostsErrorStates(error.toString()));
@@ -286,11 +292,9 @@ class SocialCubit extends Cubit<SocialStates> {
         emit(SocialCreatePostLoadingStates());
 
         element.reference.collection('comments').get().then((value) {
-
           comments.add(value.docs.length);
           emit(SocialCommentsPostsSuccessStates());
         }).catchError((error) {
-
           emit(SocialCommentsPostsErrorStates(error));
         });
       });
@@ -325,5 +329,29 @@ class SocialCubit extends Cubit<SocialStates> {
     }).catchError((error) {
       emit(SocialCommentsPostsSuccessStates());
     });
+  }
+
+  List<UserModel> users = [];
+
+  void getAllUsers()
+  {
+    emit(SocialGetAllUsersLoadingStates());
+    if (users.isEmpty)
+    {
+      FirebaseFirestore.instance.collection('users').get().then((value)
+      {
+        value.docs.forEach((element)
+        {
+          if(element.data()['uId'] != userModel!.uId)
+          {
+            users.add(UserModel.fromJson(element.data()));
+          }
+        });
+        emit(SocialGetAllUsersSuccessStates());
+      }).catchError((error)
+      {
+        emit(SocialGetAllUsersErrorStates(error.toString()));
+      });
+    }
   }
 }

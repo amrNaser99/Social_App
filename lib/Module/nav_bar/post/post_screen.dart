@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/Module/nav_bar/home/feeds_screen.dart';
 import 'package:socialApp/shared/components/components.dart';
 import 'package:socialApp/shared/cubit/social_cubit.dart';
 import 'package:socialApp/shared/cubit/social_states.dart';
@@ -20,7 +19,6 @@ class PostScreen extends StatelessWidget {
         if(state is SocialCreatePostSuccessStates)
         {
           Navigator.pop(context);
-
         }
       },
       builder: (BuildContext context, state) {
@@ -37,7 +35,8 @@ class PostScreen extends StatelessWidget {
                     dateTime: DateTime.now().toString(),
                     text: textController.text,
                   );
-                  // SocialCubit.get(context).getDataUser();
+                  // Navigator.pop(context);
+                  // SocialCubit.get(context).changeNavItems(0);
                 } else {
                   SocialCubit.get(context).uploadPostImage(
                     dateTime: DateTime.now().toString(),
@@ -63,10 +62,10 @@ class PostScreen extends StatelessWidget {
                   ),
                 Row(
                   children: [
-                    const CircleAvatar(
+                     CircleAvatar(
                       radius: 25.0,
                       backgroundImage: NetworkImage(
-                        'https://media.istockphoto.com/photos/close-up-photo-beautiful-amazing-she-her-dark-skin-lady-hands-arms-picture-id1132928286?k=20&m=1132928286&s=612x612&w=0&h=ROgLQIt_7-1eYDot8mDP_Zp773P33NlJKftyyLbtnAk=',
+                        '${SocialCubit.get(context).userModel!.image}',
                       ),
                     ),
                     const SizedBox(
@@ -79,7 +78,7 @@ class PostScreen extends StatelessWidget {
                           Row(
                             children: [
                               Text(
-                                'Amr Nasser',
+                                '${SocialCubit.get(context).userModel!.userName}',
                                 style: Theme.of(context)
                                     .textTheme
                                     .subtitle1!

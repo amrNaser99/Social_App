@@ -11,7 +11,7 @@ HexColor colorOrangeLight = HexColor('#F24405');
 const primaryColorDark = Color(-14803426);
 const accentColor = Color(-14792287);
 HexColor darkColor =  HexColor('333739');
-Color? greyColor =  HexColor('#D9D9D9');
+Color greyColor =  HexColor('#D9D9D9');
 Color? dark =  HexColor('#0D0D0D');
 
 Color? mainColor = HexColor('#0554F2');

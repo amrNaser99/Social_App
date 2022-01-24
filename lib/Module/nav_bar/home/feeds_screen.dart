@@ -16,7 +16,12 @@ class FeedsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (BuildContext context, state) {},
+      listener: (BuildContext context, state) {
+        if(state is SocialCreatePostSuccessStates)
+        {
+          SocialCubit.get(context).getDataUser();
+        }
+      },
       builder: (BuildContext context, state) {
         return ConditionalBuilder(
           condition: SocialCubit.get(context).posts.isNotEmpty &&
@@ -350,50 +355,39 @@ class FeedsScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                         top: 5.0,
                       ),
-                      child: InkWell(
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              radius: 18.0,
-                              backgroundImage: NetworkImage(
-                                '${SocialCubit.get(context).userModel!.image}',
-                              ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 18.0,
+                            backgroundImage: NetworkImage(
+                              '${SocialCubit.get(context).userModel!.image}',
                             ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            // Text(
-                            //   'Write a comment...',
-                            //   style:
-                            //       Theme.of(context).textTheme.caption!.copyWith(
-                            //             height: 1.4,
-                            //           ),
-                            // ),
-                            Expanded(
-                              child: Container(
-                                height: 30.0,
-                                child: TextFormField(
-                                  controller: commentController,
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: 'Write a comment...',
-                                    hintStyle:
-                                        Theme.of(context).textTheme.caption,
-                                  ),
-                                  onFieldSubmitted: (String value) {
-                                    SocialCubit.get(context).commentPost(
-                                        SocialCubit.get(context).postsId[index],
-                                        commentController.text);
-                                    SocialCubit.get(context).getDataUser();
-                                  },
+                          ),
+                          const SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: Container(
+                              height: 30.0,
+                              child: TextFormField(
+                                controller: commentController,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'Write a comment...',
+                                  hintStyle:
+                                      Theme.of(context).textTheme.caption,
                                 ),
+                                onFieldSubmitted: (String value) {
+                                  SocialCubit.get(context).commentPost(
+                                      SocialCubit.get(context).postsId[index],
+                                      commentController.text);
+                                  commentController.clear();
+                                  SocialCubit.get(context).getDataUser();
+                                },
                               ),
                             ),
-                          ],
-                        ),
-                        onTap: () {
-                          //TODO
-                        },
+                          ),
+                        ],
                       ),
                     ),
                   ),
