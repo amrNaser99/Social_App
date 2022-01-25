@@ -18,6 +18,8 @@ class PostScreen extends StatelessWidget {
       listener: (BuildContext context, state) {
         if(state is SocialCreatePostSuccessStates)
         {
+          SocialCubit.get(context).getPosts();
+          SocialCubit.get(context).changeNavItems(0);
           Navigator.pop(context);
         }
       },

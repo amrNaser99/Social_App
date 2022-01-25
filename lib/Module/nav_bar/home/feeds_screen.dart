@@ -19,8 +19,9 @@ class FeedsScreen extends StatelessWidget {
       listener: (BuildContext context, state) {
         if(state is SocialCreatePostSuccessStates)
         {
-          SocialCubit.get(context).getDataUser();
+          SocialCubit.get(context).getPosts();
         }
+
       },
       builder: (BuildContext context, state) {
         return ConditionalBuilder(
