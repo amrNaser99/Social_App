@@ -1,12 +1,12 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/Module/login/social_login_screen.dart';
-import 'package:socialApp/Module/register/register_cubit/social_register_cubit.dart';
-import 'package:socialApp/Module/register/register_cubit/social_register_states.dart';
-import 'package:socialApp/layout/social_layout.dart';
-import 'package:socialApp/shared/components/components.dart';
-import 'package:socialApp/shared/styles/colors.dart';
+import 'package:twasol/Module/login/social_login_screen.dart';
+import 'package:twasol/Module/register/register_cubit/social_register_cubit.dart';
+import 'package:twasol/Module/register/register_cubit/social_register_states.dart';
+import 'package:twasol/layout/social_layout.dart';
+import 'package:twasol/shared/components/components.dart';
+import 'package:twasol/shared/styles/colors.dart';
 
 class SocialRegisterScreen extends StatefulWidget {
   const SocialRegisterScreen({Key? key}) : super(key: key);

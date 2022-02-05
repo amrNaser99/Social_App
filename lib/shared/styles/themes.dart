@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:socialApp/shared/styles/colors.dart';
+import 'package:twasol/shared/styles/colors.dart';
 
 ThemeData lightMode = ThemeData(
     primarySwatch: primaryColor,

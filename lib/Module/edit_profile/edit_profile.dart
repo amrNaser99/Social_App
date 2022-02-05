@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/shared/components/components.dart';
-import 'package:socialApp/shared/cubit/social_cubit.dart';
-import 'package:socialApp/shared/cubit/social_states.dart';
-import 'package:socialApp/shared/styles/colors.dart';
-import 'package:socialApp/shared/styles/icon_broken.dart';
+import 'package:twasol/shared/components/components.dart';
+import 'package:twasol/shared/cubit/social_cubit.dart';
+import 'package:twasol/shared/cubit/social_states.dart';
+import 'package:twasol/shared/styles/colors.dart';
+import 'package:twasol/shared/styles/icon_broken.dart';
 
 class EditProfileScreen extends StatelessWidget {
   var userNameController = TextEditingController();

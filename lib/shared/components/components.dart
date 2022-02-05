@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:socialApp/shared/styles/colors.dart';
-import 'package:socialApp/shared/styles/icon_broken.dart';
+import 'package:twasol/shared/styles/colors.dart';
+import 'package:twasol/shared/styles/icon_broken.dart';
 
 Widget defaultButton({
   double width = double.infinity,

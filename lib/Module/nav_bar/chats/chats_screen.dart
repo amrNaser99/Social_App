@@ -1,11 +1,11 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/Module/chat_details/chat_details_screen.dart';
-import 'package:socialApp/model/user_model.dart';
-import 'package:socialApp/shared/components/components.dart';
-import 'package:socialApp/shared/cubit/social_cubit.dart';
-import 'package:socialApp/shared/cubit/social_states.dart';
+import 'package:twasol/Module/chat_details/chat_details_screen.dart';
+import 'package:twasol/model/user_model.dart';
+import 'package:twasol/shared/components/components.dart';
+import 'package:twasol/shared/cubit/social_cubit.dart';
+import 'package:twasol/shared/cubit/social_states.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({Key? key}) : super(key: key);

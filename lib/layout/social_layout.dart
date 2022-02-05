@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/Module/nav_bar/post/post_screen.dart';
-import 'package:socialApp/shared/components/components.dart';
-import 'package:socialApp/shared/cubit/social_cubit.dart';
-import 'package:socialApp/shared/cubit/social_states.dart';
-import 'package:socialApp/shared/styles/icon_broken.dart';
+import 'package:twasol/Module/nav_bar/post/post_screen.dart';
+import 'package:twasol/shared/components/components.dart';
+import 'package:twasol/shared/cubit/social_cubit.dart';
+import 'package:twasol/shared/cubit/social_states.dart';
+import 'package:twasol/shared/styles/icon_broken.dart';
 
 class SocialLayout extends StatelessWidget {
+  static GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
+
   const SocialLayout({Key? key}) : super(key: key);
 
 
@@ -22,7 +24,7 @@ class SocialLayout extends StatelessWidget {
       builder: (BuildContext context, state) {
         SocialCubit cubit = BlocProvider.of(context);
         return Scaffold(
-
+          key: scaffoldKey,
           appBar: AppBar(
             title: Text(
               cubit.appBarTitles[cubit.currentIndex],
@@ -44,6 +46,7 @@ class SocialLayout extends StatelessWidget {
           ),
           body: cubit.screens[cubit.currentIndex],
           bottomNavigationBar: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
             items: const [
               BottomNavigationBarItem(
                 icon: Icon(IconBroken.Home),

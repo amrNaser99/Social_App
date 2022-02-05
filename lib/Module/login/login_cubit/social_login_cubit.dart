@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/Module/login/login_cubit/social_login_states.dart';
-import 'package:socialApp/shared/components/constants.dart';
-import 'package:socialApp/shared/network/local/cache_helper.dart';
+import 'package:twasol/Module/login/login_cubit/social_login_states.dart';
+import 'package:twasol/shared/components/constants.dart';
+import 'package:twasol/shared/network/local/cache_helper.dart';
 
 class SocialLoginCubit extends Cubit<SocialLoginStates>
 {

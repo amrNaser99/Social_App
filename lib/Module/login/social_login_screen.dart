@@ -1,12 +1,12 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/Module/register/register_screen.dart';
-import 'package:socialApp/layout/social_layout.dart';
-import 'package:socialApp/shared/components/components.dart';
-import 'package:socialApp/shared/components/constants.dart';
-import 'package:socialApp/shared/network/local/cache_helper.dart';
-import 'package:socialApp/shared/styles/colors.dart';
+import 'package:twasol/Module/register/register_screen.dart';
+import 'package:twasol/layout/social_layout.dart';
+import 'package:twasol/shared/components/components.dart';
+import 'package:twasol/shared/components/constants.dart';
+import 'package:twasol/shared/network/local/cache_helper.dart';
+import 'package:twasol/shared/styles/colors.dart';
 import 'login_cubit/social_login_cubit.dart';
 import 'login_cubit/social_login_states.dart';
 

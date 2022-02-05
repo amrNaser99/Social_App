@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/Module/register/register_cubit/social_register_states.dart';
-import 'package:socialApp/model/user_model.dart';
-import 'package:socialApp/shared/components/constants.dart';
-import 'package:socialApp/shared/network/local/cache_helper.dart';
+import 'package:twasol/Module/register/register_cubit/social_register_states.dart';
+import 'package:twasol/model/user_model.dart';
+import 'package:twasol/shared/components/constants.dart';
+import 'package:twasol/shared/network/local/cache_helper.dart';
 
 class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
   SocialRegisterCubit() : super(SocialRegisterInitialStates());
@@ -72,6 +73,7 @@ class SocialRegisterCubit extends Cubit<SocialRegisterStates> {
         .doc(uId)
         .set(userModel.toMap())
         .then((value) {
+          FirebaseMessaging.instance.subscribeToTopic('users');
       emit(SocialCreateUserSuccessStates());
     }).catchError((error) {
       emit(SocialCreateUserErrorStates(error.toString()));

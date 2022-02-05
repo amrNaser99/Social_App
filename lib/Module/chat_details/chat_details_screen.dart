@@ -1,18 +1,17 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/model/massege_model.dart';
-import 'package:socialApp/model/user_model.dart';
-import 'package:socialApp/shared/cubit/social_cubit.dart';
-import 'package:socialApp/shared/cubit/social_states.dart';
-import 'package:socialApp/shared/styles/colors.dart';
-import 'package:socialApp/shared/styles/icon_broken.dart';
+import 'package:twasol/model/massege_model.dart';
+import 'package:twasol/model/user_model.dart';
+import 'package:twasol/shared/cubit/social_cubit.dart';
+import 'package:twasol/shared/cubit/social_states.dart';
+import 'package:twasol/shared/styles/colors.dart';
+import 'package:twasol/shared/styles/icon_broken.dart';
 
 class ChatDetailsScreen extends StatelessWidget {
   late UserModel userModel;
 
-  var messageController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
 
   ChatDetailsScreen({
     Key? key,
@@ -58,9 +57,6 @@ class ChatDetailsScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: ListView.separated(
-                            addAutomaticKeepAlives: true,
-                            dragStartBehavior: DragStartBehavior.down,
-                            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
                             physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) {
                               var message =

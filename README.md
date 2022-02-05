@@ -1,6 +1,6 @@
-# social_app
+# twasol
 
-A new Social Flutter project.
+A Social Flutter project.
 
 ## Getting Started
 

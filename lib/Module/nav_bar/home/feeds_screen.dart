@@ -1,32 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:socialApp/model/post_model.dart';
-import 'package:socialApp/shared/cubit/social_cubit.dart';
-import 'package:socialApp/shared/cubit/social_states.dart';
-import 'package:socialApp/shared/styles/colors.dart';
-import 'package:socialApp/shared/styles/icon_broken.dart';
+import 'package:twasol/model/post_model.dart';
+import 'package:twasol/shared/cubit/social_cubit.dart';
+import 'package:twasol/shared/cubit/social_states.dart';
+import 'package:twasol/shared/styles/colors.dart';
+import 'package:twasol/shared/styles/icon_broken.dart';
 
 class FeedsScreen extends StatelessWidget {
   FeedsScreen({Key? key}) : super(key: key);
 
-  var commentController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-      listener: (BuildContext context, state) {
-        if(state is SocialCreatePostSuccessStates)
-        {
-          SocialCubit.get(context).getPosts();
-        }
-
-      },
+    //TODO make feed screen stream builder and add snabshot listen
+    return  BlocConsumer<SocialCubit, SocialStates>(
+      listener: (BuildContext context, state) {},
       builder: (BuildContext context, state) {
         return ConditionalBuilder(
-          condition: SocialCubit.get(context).posts.isNotEmpty &&
-              SocialCubit.get(context).userModel != null,
+          condition: true,
+          // SocialCubit.get(context).posts.isNotEmpty &&
+          //     SocialCubit.get(context).userModel != null,
           builder: (context) {
             //TODO Email Verification
             return SingleChildScrollView(
@@ -83,10 +79,11 @@ class FeedsScreen extends StatelessWidget {
             );
           },
           fallback: (context) =>
-              const Center(child: CircularProgressIndicator()),
+          const Center(child: CircularProgressIndicator()),
         );
       },
     );
+    ;
   }
 
   Widget buildPostItem(context, PostModel model, index) => Card(
@@ -151,7 +148,9 @@ class FeedsScreen extends StatelessWidget {
                   ),
                   //TODO More
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      SocialCubit.get(context).deletePost(post: model);
+                    },
                     icon: const Icon(
                       IconBroken.More_Circle,
                     ),

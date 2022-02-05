@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:socialApp/Module/register/register_screen.dart';
-import 'package:socialApp/model/boarding_model.dart';
-import 'package:socialApp/shared/components/components.dart';
-import 'package:socialApp/shared/network/local/cache_helper.dart';
-import 'package:socialApp/shared/styles/colors.dart';
+import 'package:twasol/Module/register/register_screen.dart';
+import 'package:twasol/model/boarding_model.dart';
+import 'package:twasol/shared/components/components.dart';
+import 'package:twasol/shared/network/local/cache_helper.dart';
+import 'package:twasol/shared/styles/colors.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
