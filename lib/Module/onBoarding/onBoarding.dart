@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:twasol/Module/login/social_login_screen.dart';
 import 'package:twasol/Module/register/register_screen.dart';
 import 'package:twasol/model/boarding_model.dart';
 import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/network/local/cache_helper.dart';
 import 'package:twasol/shared/styles/colors.dart';
+
+import '../start_screen/start_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
@@ -18,17 +21,17 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     BoardingModel(
       image: 'assets/images/onb1.png',
       title: 'Communicate with People',
-      body: 'You Can Shop Easy',
+      body: 'Communicate with People ',
     ),
     BoardingModel(
       image: 'assets/images/negotiation.png',
-      title: 'Shop Anytime',
-      body: 'You Can Shop Anytime',
+      title: 'Chat With Your Friend',
+      body: 'Chat With Your Friend',
     ),
     BoardingModel(
       image: 'assets/images/onb3.png',
-      title: 'Shop Anywhere',
-      body: 'You Can Shop Anywhere',
+      title: 'Post Your Daily in Twasol',
+      body: 'Post Your Daily in Twasol',
     ),
   ];
 
@@ -41,7 +44,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       if (value) {
         NavigateAndFinish(
           context,
-          const SocialRegisterScreen(),
+          const SocialLoginScreen(),
         );
       }
     });
@@ -64,7 +67,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
           ),
         ],
       ),
-      backgroundColor: mainColor,
+      backgroundColor: Colors.indigo,
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Column(
@@ -134,7 +137,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
 Widget buildBoardingItem(BoardingModel model) => Container(
       height: 100.0,
-      color: mainColor,
+      color: Colors.indigo,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

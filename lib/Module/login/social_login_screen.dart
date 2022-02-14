@@ -7,6 +7,7 @@ import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/components/constants.dart';
 import 'package:twasol/shared/network/local/cache_helper.dart';
 import 'package:twasol/shared/styles/colors.dart';
+import 'package:twasol/shared/styles/icon_broken.dart';
 import 'login_cubit/social_login_cubit.dart';
 import 'login_cubit/social_login_states.dart';
 
@@ -139,19 +140,41 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
                           fallback: (context) =>
                               const Center(child: CircularProgressIndicator()),
                         ),
-                        const SizedBox(
-                          height: 15.0,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text('Don\'t Have Account?'),
-                            defaultTextButton(
-                              onPressed: () {
-                                NavigateAndFinish(
-                                    context, SocialRegisterScreen());
+                            const SizedBox(
+                              height: 15.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text('Don\'t Have Account?'),
+                                defaultTextButton(
+                                  onPressed: () {
+                                    NavigateAndFinish(
+                                        context, SocialRegisterScreen());
+                                  },
+                                  text: 'Register',
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 15.0,
+                            ),
+                            const Text('Sign In By..'),
+                            const SizedBox(
+                              height: 10.0,
+                            ),
+                            IconButton(
+                              onPressed: ()
+                              {
+                                //TODO SignBy Google
                               },
-                              text: 'Register',
+                              icon: CircleAvatar(
+                                backgroundImage: AssetImage('assets/images/google_logo.png'),
+                              ),
+
                             ),
                           ],
                         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/model/massege_model.dart';
 import 'package:twasol/model/user_model.dart';
+import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
 import 'package:twasol/shared/styles/colors.dart';
@@ -28,6 +29,13 @@ class ChatDetailsScreen extends StatelessWidget {
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
+                leading: IconButton(
+                  icon: const Icon(IconBroken.Arrow___Left_2,color: Colors.white,),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                backgroundColor: Colors.indigo,
                 titleSpacing: 0.0,
                 title: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 40),
@@ -35,14 +43,18 @@ class ChatDetailsScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 20.0,
-                        backgroundImage: NetworkImage('${userModel.image}'),
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 19.0,
+                          backgroundImage: NetworkImage('${userModel.image}'),
+                        ),
                       ),
                       const SizedBox(
                         width: 15.0,
                       ),
                       Text(
                         '${userModel.userName}',
-                        style: Theme.of(context).textTheme.bodyText1,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white),
                       ),
                     ],
                   ),
@@ -119,7 +131,7 @@ class ChatDetailsScreen extends StatelessWidget {
                               SizedBox(
                                 height: 50.0,
                                 child: MaterialButton(
-                                  color: mainColor,
+                                  color: Colors.indigo,
                                   onPressed: () {
                                     SocialCubit.get(context).sendMessage(
                                       receiverId: userModel.uId!,
@@ -161,7 +173,7 @@ class ChatDetailsScreen extends StatelessWidget {
             vertical: 5.0,
           ),
           decoration: BoxDecoration(
-            color: mainColor,
+            color: Colors.indigo,
             borderRadius: const BorderRadiusDirectional.only(
               bottomStart: Radius.circular(10.0),
               topStart: Radius.circular(10.0),

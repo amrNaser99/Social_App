@@ -206,20 +206,27 @@ class EditProfileScreen extends StatelessWidget {
                     const SizedBox(
                       height: 20.0,
                     ),
-                  defaultTextFormField(
-                    controller: userNameController,
-                    keyboardType: TextInputType.name,
-                    prefixIcon: IconBroken.User,
-                    labelText: 'UserName',
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: defaultTextFormField(
+                      controller: userNameController,
+                      keyboardType: TextInputType.name,
+                      prefixIcon: IconBroken.User,
+                      labelText: 'UserName',
+                    ),
                   ),
                   const SizedBox(
                     height: 10.0,
                   ),
-                  defaultTextFormField(
-                      controller: bioController,
-                      keyboardType: TextInputType.name,
-                      prefixIcon: IconBroken.Edit,
-                      labelText: 'Bio'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: defaultTextFormField(
+                        controller: bioController,
+                        keyboardType: TextInputType.name,
+                        prefixIcon: IconBroken.Edit,
+                        labelText: 'Bio'),
+                  ),
+
                 ],
               ),
             ),

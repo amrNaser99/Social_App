@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "109118035057-5mdo08av2p9qcvo0kcv56g8htql2ia7l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.amr_Naser.twasol",
+            "certificate_hash": "470874856a2fc954b0855fa720a3b2b167316e03"
+          }
+        },
+        {
           "client_id": "109118035057-0jujld57tsc6e7jr22jblnlns89keu6h.apps.googleusercontent.com",
           "client_type": 3
         }

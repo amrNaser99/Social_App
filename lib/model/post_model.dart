@@ -5,6 +5,9 @@ class PostModel {
   late String? dateTime;
   late String? text;
   late String? postImage;
+  late String? postId;
+
+
 
   PostModel({
     this.userName,
@@ -13,6 +16,7 @@ class PostModel {
     this.dateTime,
     this.text,
     this.postImage,
+    this.postId,
   });
 
   PostModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +26,7 @@ class PostModel {
     dateTime = json['dateTime'];
     text = json['text'];
     postImage = json['postImage'];
+    postId = json['postId'];
   }
 
   Map<String, dynamic> toMap() {

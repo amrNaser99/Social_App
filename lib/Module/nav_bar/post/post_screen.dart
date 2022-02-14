@@ -37,8 +37,6 @@ class PostScreen extends StatelessWidget {
                     dateTime: DateTime.now().toString(),
                     text: textController.text,
                   );
-                  // Navigator.pop(context);
-                  // SocialCubit.get(context).changeNavItems(0);
                 } else {
                   SocialCubit.get(context).uploadPostImage(
                     dateTime: DateTime.now().toString(),

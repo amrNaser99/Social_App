@@ -14,7 +14,8 @@ HexColor darkColor =  HexColor('333739');
 Color greyColor =  HexColor('#D9D9D9');
 Color? dark =  HexColor('#0D0D0D');
 
-Color? mainColor = HexColor('#0554F2');
+Color? mainColor = Colors.indigo;
+// Color? mainColor = HexColor('#0554F2');
 Color? t1l = HexColor('#7BB2ED');
 Color? w = HexColor('#FAFAFA');
 Color? t4 = HexColor('#B8B8B8');

@@ -16,7 +16,7 @@ class SocialLoginCubit extends Cubit<SocialLoginStates>
     required String password,
   }) {
     emit(SocialLoginLoadingStates());
-    print('in userLogin ');
+    print('in userLogin');
 
     FirebaseAuth.instance
         .signInWithEmailAndPassword(
@@ -24,6 +24,7 @@ class SocialLoginCubit extends Cubit<SocialLoginStates>
       password: password,
     )
         .then((value) {
+          print('==========================');
       CacheHelper.saveData(key: 'email', value: value.user!.email);
       CacheHelper.saveData(key: 'uId', value: value.user!.uid);
       uId = value.user!.uid;

@@ -1,11 +1,9 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:twasol/Module/chat_details/chat_details_screen.dart';
-import 'package:twasol/model/user_model.dart';
-import 'package:twasol/shared/components/components.dart';
-import 'package:twasol/shared/cubit/social_cubit.dart';
-import 'package:twasol/shared/cubit/social_states.dart';
+import '../../../shared/components/components.dart';
+import '../../../shared/cubit/social_cubit.dart';
+import '../../../shared/cubit/social_states.dart';
 
 class ChatsScreen extends StatelessWidget {
   const ChatsScreen({Key? key}) : super(key: key);
@@ -16,13 +14,14 @@ class ChatsScreen extends StatelessWidget {
       listener: (BuildContext context, state) {},
       builder: (BuildContext context, state) {
         return ConditionalBuilder(
-          condition: SocialCubit.get(context).users.isNotEmpty,
+          condition: true,
+          // SocialCubit.get(context).chatUsers.isNotEmpty,
           builder: (BuildContext context) => ListView.separated(
             physics: const BouncingScrollPhysics(),
             itemBuilder: (context, index) =>
-                buildChatItem(context, SocialCubit.get(context).users[index]),
+                buildChatItem(context, SocialCubit.get(context).chatUsers[index]),
             separatorBuilder: (context, index) =>  myDivider(),
-            itemCount: SocialCubit.get(context).users.length,
+            itemCount: SocialCubit.get(context).chatUsers.length,
           ),
           fallback: (BuildContext context) =>
               const Center(child: CircularProgressIndicator()),
@@ -31,43 +30,4 @@ class ChatsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildChatItem(context, UserModel model) => InkWell(
-        onTap: () {
-          NavigateTo(
-              context,
-              ChatDetailsScreen(
-                userModel: model,
-              ));
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 25.0,
-                backgroundImage: NetworkImage(
-                  '${model.image}',
-                ),
-                // AssetImage('assets/images/deafault.jpg'),
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-              Expanded(
-                child: Text(
-                  '${model.userName}',
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        height: 1.4,
-                      ),
-                ),
-              ),
-              const SizedBox(
-                width: 15,
-              ),
-            ],
-          ),
-        ),
-      );
 }

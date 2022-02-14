@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:twasol/shared/styles/colors.dart';
 import 'package:twasol/shared/styles/icon_broken.dart';
+
+import '../../Module/comments/comment_screen.dart';
+import '../../Module/nav_bar/chats/chat_details/chat_details_screen.dart';
+import '../../model/post_model.dart';
+import '../../model/user_model.dart';
+import '../cubit/social_cubit.dart';
 
 Widget defaultButton({
   double width = double.infinity,
@@ -16,7 +23,7 @@ Widget defaultButton({
       child: MaterialButton(
         child: Text(
           isUpperCase ? text.toUpperCase() : text,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
           ),
         ),
@@ -24,7 +31,7 @@ Widget defaultButton({
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10.0),
-        color: color,
+        color: Colors.indigo,
       ),
     );
 
@@ -105,11 +112,10 @@ PreferredSizeWidget defaultAppBar({
   String? title,
   List<Widget>? actions,
 }) =>
-     AppBar(
+    AppBar(
       leading: IconButton(
         icon: const Icon(IconBroken.Arrow___Left_2),
-        onPressed: ()
-        {
+        onPressed: () {
           Navigator.pop(context);
         },
       ),
@@ -207,12 +213,669 @@ Widget buildListSItem(data, context, index) => Padding(
     );
 
 Widget myDivider() => Padding(
-  padding: const EdgeInsets.symmetric(
-    horizontal: 15.0,
-  ),
-  child: Container(
-    width: double.infinity,
-    height: 1.0,
-    color: Colors.grey[300],
-  ),
-);
+      padding: const EdgeInsets.symmetric(
+        horizontal: 15.0,
+      ),
+      child: Container(
+        width: double.infinity,
+        height: 1.0,
+        color: Colors.grey[300],
+      ),
+    );
+
+Widget buildChatItem(context, UserModel model) => InkWell(
+      onTap: () {
+        NavigateTo(
+            context,
+            ChatDetailsScreen(
+              userModel: model,
+            ));
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              radius: 25.0,
+              backgroundImage: NetworkImage(
+                '${model.image}',
+              ),
+              // AssetImage('assets/images/deafault.jpg'),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            Expanded(
+              child: Text(
+                '${model.userName}',
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      fontWeight: FontWeight.bold,
+                      height: 1.4,
+                    ),
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+          ],
+        ),
+      ),
+    );
+
+Widget buildPostItem(
+  context,
+  PostModel model,
+  index,
+) =>
+    Card(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      elevation: 5.0,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 8.0,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 25.0,
+                  backgroundImage: NetworkImage(
+                    '${model.image}',
+                  ),
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            '${model.userName}',
+                            style:
+                                Theme.of(context).textTheme.subtitle1!.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.4,
+                                    ),
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Icon(
+                            Icons.check_circle,
+                            color: mainColor,
+                            size: 16.0,
+                          ),
+                        ],
+                      ),
+                      Text(
+                        '${DateFormat.yMMMMEEEEd().format(DateTime.parse(model.dateTime!))}',
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              height: 1.4,
+                            ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                //TODO More
+                IconButton(
+                  onPressed: () {
+                    SocialCubit.get(context)
+                        .deletePost(post: model, index: index);
+                  },
+                  icon: const Icon(
+                    IconBroken.More_Circle,
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 15.0,
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 1.0,
+                color: Colors.grey[300],
+              ),
+            ),
+            //Text Body
+            if (model.text != null)
+              const SizedBox(
+                height: 5,
+              ),
+            if (model.text != null)
+              Text(
+                '${model.text}',
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    fontSize: 14.0,
+                    height: 1.3,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black),
+              ),
+            // const SizedBox(height: 15.0,),
+            // Tags
+            // Padding(
+            //   padding: const EdgeInsetsDirectional.only(top: 5.0),
+            //   child: Container(
+            //     width: double.infinity,
+            //     child: Wrap(
+            //       children: [
+            //         Container(
+            //           height: 25.0,
+            //           child: MaterialButton(
+            //             onPressed: () {},
+            //             minWidth: 1.0,
+            //             padding: EdgeInsets.zero,
+            //             child: const Text(
+            //               '#mobile_developmemt ',
+            //               style: TextStyle(
+            //                 color: Colors.blue,
+            //                 fontWeight: FontWeight.w600,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //         Container(
+            //           height: 25.0,
+            //           child: MaterialButton(
+            //             onPressed: () {},
+            //             minWidth: 1.0,
+            //             padding: EdgeInsets.zero,
+            //             child: const Text(
+            //               '#Flutter ',
+            //               style: TextStyle(
+            //                 color: Colors.blue,
+            //                 fontWeight: FontWeight.w600,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //         Container(
+            //           height: 25.0,
+            //           child: MaterialButton(
+            //             onPressed: () {},
+            //             minWidth: 1.0,
+            //             padding: EdgeInsets.zero,
+            //             child: const Text(
+            //               '#flutter ',
+            //               style: TextStyle(
+            //                 color: Colors.blue,
+            //                 fontWeight: FontWeight.w600,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //         Container(
+            //           height: 25.0,
+            //           child: MaterialButton(
+            //             onPressed: () {},
+            //             minWidth: 1.0,
+            //             padding: EdgeInsets.zero,
+            //             child: const Text(
+            //               '#flutter ',
+            //               style: TextStyle(
+            //                 color: Colors.blue,
+            //                 fontWeight: FontWeight.w600,
+            //               ),
+            //             ),
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+
+            // post Image
+            if (model.postImage != "")
+              Padding(
+                padding: const EdgeInsetsDirectional.only(
+                  top: 10.0,
+                ),
+                child: Container(
+                  width: double.infinity,
+                  height: 140.0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4.0),
+                    image: DecorationImage(
+                      image: NetworkImage(
+                        '${model.postImage}',
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+
+            // emojies bar
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 5.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 5.0,
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              IconBroken.Heart,
+                              size: 20,
+                              color: Colors.red,
+                            ),
+                            const SizedBox(
+                              width: 5.0,
+                            ),
+                            //TODO Likes
+                            Text(
+                              '0',
+                              // '${SocialCubit.get(context).likes[index]}',
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: () {},
+                    ),
+                  ),
+                  Expanded(
+                    child: InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 5.0,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              IconBroken.More_Circle,
+                              size: 20,
+                              color: mainColor,
+                            ),
+                            const SizedBox(
+                              width: 5.0,
+                            ),
+                            Text(
+                              //TODO
+                              '0 Comments',
+                              // '${SocialCubit.get(context).comments[index]} Comments',
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: ()
+                      {
+                        NavigateTo(context, CommentScreen());
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                bottom: 5.0,
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 1.0,
+                color: Colors.grey[300],
+              ),
+            ),
+            Row(
+              children: [
+                //comment
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 5.0,
+                    ),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 18.0,
+                          backgroundImage: NetworkImage(
+                            '${SocialCubit.get(context).userModel!.image}',
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 30.0,
+                            child: TextFormField(
+                              //TODO Comments
+                              // controller: SocialCubit.get(context)
+                              //     .commentController[index],
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Write a comment...',
+                                hintStyle: Theme.of(context).textTheme.caption,
+                              ),
+                              onFieldSubmitted: (String value) {
+                                // SocialCubit.get(context).commentPost(
+                                //     SocialCubit.get(context).postsId[index],
+                                //     SocialCubit.get(context)
+                                //         .commentController[index]
+                                //         .text);
+                                // SocialCubit.get(context)
+                                //     .commentController[index]
+                                //     .clear();
+                                // SocialCubit.get(context).getDataUser();
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Icon(
+                          IconBroken.Heart,
+                          size: 20,
+                          color: Colors.red,
+                        ),
+                        const SizedBox(
+                          width: 5.0,
+                        ),
+                        Text(
+                          'Like',
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    SocialCubit.get(context)
+                        .likePost(SocialCubit.get(context).postsId[index]);
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+// Widget buildPostItem(context,PostModel model, index) => Card(
+//   clipBehavior: Clip.antiAliasWithSaveLayer,
+//   elevation: 5.0,
+//   margin: const EdgeInsets.symmetric(
+//     horizontal: 8.0,
+//   ),
+//   child: Padding(
+//     padding: const EdgeInsets.all(10.0),
+//     child: Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Row(
+//           children: [
+//             CircleAvatar(
+//               radius: 25.0,
+//               backgroundImage: NetworkImage(
+//                 '${model.image}',
+//               ),
+//             ),
+//             const SizedBox(
+//               width: 15,
+//             ),
+//             Expanded(
+//               child: Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Row(
+//                     children: [
+//                       Text(
+//                         '${model.userName}',
+//                         style: Theme.of(context)
+//                             .textTheme
+//                             .subtitle1!
+//                             .copyWith(
+//                           fontWeight: FontWeight.bold,
+//                           height: 1.4,
+//                         ),
+//                       ),
+//                       const SizedBox(
+//                         width: 5,
+//                       ),
+//                       Icon(
+//                         Icons.check_circle,
+//                         color: mainColor,
+//                         size: 16.0,
+//                       ),
+//                     ],
+//                   ),
+//                   Text(
+//                     '${model.dateTime!}',
+//                     // '${DateFormat.yMMMMEEEEd().format(DateTime.parse(model.dateTime!))}',
+//                     style: Theme.of(context).textTheme.caption!.copyWith(
+//                       height: 1.4,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//             const SizedBox(
+//               width: 15,
+//             ),
+//             //TODO More
+//             IconButton(
+//               onPressed: () {
+//                 SocialCubit.get(context).deletePost(post: model, index: index);
+//               },
+//               icon: const Icon(
+//                 IconBroken.More_Circle,
+//               ),
+//             ),
+//           ],
+//         ),
+//         Padding(
+//           padding: const EdgeInsets.symmetric(
+//             vertical: 15.0,
+//           ),
+//           child: Container(
+//             width: double.infinity,
+//             height: 1.0,
+//             color: Colors.grey[300],
+//           ),
+//         ),
+//         //Text Body
+//         if (model.text != null)
+//           const SizedBox(
+//             height: 5,
+//           ),
+//         if (model.text != null)
+//           Text(
+//             '${model.text}',
+//             style: Theme.of(context).textTheme.subtitle1!.copyWith(
+//                 fontSize: 14.0,
+//                 height: 1.3,
+//                 fontWeight: FontWeight.w600,
+//                 color: Colors.black),
+//           ),
+//         if (model.postImage != "")
+//           Padding(
+//             padding: const EdgeInsetsDirectional.only(
+//               top: 10.0,
+//             ),
+//             child: Container(
+//               width: double.infinity,
+//               height: 140.0,
+//               decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(4.0),
+//                 image: DecorationImage(
+//                   image: NetworkImage(
+//                     '${model.postImage}',
+//                   ),
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//             ),
+//           ),
+//
+//         // emojies bar
+//         Padding(
+//           padding: const EdgeInsets.symmetric(vertical: 5.0),
+//           child: Row(
+//             children: [
+//               Expanded(
+//                 child: InkWell(
+//                   child: Padding(
+//                     padding: const EdgeInsets.symmetric(
+//                       vertical: 5.0,
+//                     ),
+//                     child: Row(
+//                       children: [
+//                         const Icon(
+//                           IconBroken.Heart,
+//                           size: 20,
+//                           color: Colors.red,
+//                         ),
+//                         const SizedBox(
+//                           width: 5.0,
+//                         ),
+//                         Text(
+//                           '${SocialCubit.get(context).likes[index]}',
+//                           style: Theme.of(context).textTheme.caption,
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   onTap: () {},
+//                 ),
+//               ),
+//               Expanded(
+//                 child: InkWell(
+//                   child: Padding(
+//                     padding: const EdgeInsets.symmetric(
+//                       vertical: 5.0,
+//                     ),
+//                     child: Row(
+//                       mainAxisAlignment: MainAxisAlignment.end,
+//                       children: [
+//                         Icon(
+//                           IconBroken.More_Circle,
+//                           size: 20,
+//                           color: mainColor,
+//                         ),
+//                         const SizedBox(
+//                           width: 5.0,
+//                         ),
+//                         Text(
+//                           //TODO
+//                           '${SocialCubit.get(context).comments[index]} Comments',
+//                           style: Theme.of(context).textTheme.caption,
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                   onTap: () {},
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//         Padding(
+//           padding: const EdgeInsets.only(
+//             bottom: 5.0,
+//           ),
+//           child: Container(
+//             width: double.infinity,
+//             height: 1.0,
+//             color: Colors.grey[300],
+//           ),
+//         ),
+//         Row(
+//           children: [
+//             //comment
+//             Expanded(
+//               child: Padding(
+//                 padding: const EdgeInsets.only(
+//                   top: 5.0,
+//                 ),
+//                 child: Row(
+//                   children: [
+//                     CircleAvatar(
+//                       radius: 18.0,
+//                       backgroundImage: NetworkImage(
+//                         '${SocialCubit.get(context).userModel!.image}',
+//                       ),
+//                     ),
+//                     const SizedBox(
+//                       width: 15,
+//                     ),
+//                     Expanded(
+//                       child: Container(
+//                         height: 30.0,
+//                         child: TextFormField(
+//                           controller: commentController,
+//                           decoration: InputDecoration(
+//                             border: InputBorder.none,
+//                             hintText: 'Write a comment...',
+//                             hintStyle:
+//                             Theme.of(context).textTheme.caption,
+//                           ),
+//                           onFieldSubmitted: (String value) {
+//                             SocialCubit.get(context).commentPost(
+//                                 SocialCubit.get(context).postsId[index],
+//                                 commentController.text);
+//                             commentController.clear();
+//                             SocialCubit.get(context).getDataUser();
+//                           },
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//             ),
+//             InkWell(
+//               child: Padding(
+//                 padding: const EdgeInsets.all(8.0),
+//                 child: Row(
+//                   children: [
+//                     const Icon(
+//                       IconBroken.Heart,
+//                       size: 20,
+//                       color: Colors.red,
+//                     ),
+//                     const SizedBox(
+//                       width: 5.0,
+//                     ),
+//                     Text(
+//                       'Like',
+//                       style: Theme.of(context).textTheme.caption,
+//                     ),
+//                   ],
+//                 ),
+//               ),
+//               onTap: () {
+//                 SocialCubit.get(context)
+//                     .likePost(SocialCubit.get(context).postsId[index]);
+//               },
+//             ),
+//           ],
+//         ),
+//       ],
+//     ),
+//   ),
+// );
+
