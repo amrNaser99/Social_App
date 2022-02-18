@@ -5,6 +5,7 @@ import 'package:twasol/shared/styles/colors.dart';
 import 'package:twasol/shared/styles/icon_broken.dart';
 
 import '../../Module/comments/comment_screen.dart';
+import '../../Module/likes_screen.dart';
 import '../../Module/nav_bar/chats/chat_details/chat_details_screen.dart';
 import '../../model/post_model.dart';
 import '../../model/user_model.dart';
@@ -315,6 +316,7 @@ Widget buildPostItem(
                         ],
                       ),
                       Text(
+                        // '${model.dateTime!}',
                         '${DateFormat.yMMMMEEEEd().format(DateTime.parse(model.dateTime!))}',
                         style: Theme.of(context).textTheme.caption!.copyWith(
                               height: 1.4,
@@ -479,14 +481,17 @@ Widget buildPostItem(
                             ),
                             //TODO Likes
                             Text(
-                              '0',
-                              // '${SocialCubit.get(context).likes[index]}',
+                              // '0',
+                              '${SocialCubit.get(context).peopleReacted.length} Likes',
                               style: Theme.of(context).textTheme.caption,
                             ),
                           ],
                         ),
                       ),
-                      onTap: () {},
+                      onTap: ()
+                      {
+                        NavigateTo(context, LikesScreen());
+                      },
                     ),
                   ),
                   Expanded(
@@ -507,9 +512,9 @@ Widget buildPostItem(
                               width: 5.0,
                             ),
                             Text(
-                              //TODO
-                              '0 Comments',
-                              // '${SocialCubit.get(context).comments[index]} Comments',
+                              //TODO Comments
+                              // '0 Comments',
+                              '${model.nComments} Comments',
                               style: Theme.of(context).textTheme.caption,
                             ),
                           ],
@@ -517,7 +522,7 @@ Widget buildPostItem(
                       ),
                       onTap: ()
                       {
-                        NavigateTo(context, CommentScreen());
+                        // NavigateTo(context, CommentScreen(model.postId));
                       },
                     ),
                   ),
@@ -605,7 +610,7 @@ Widget buildPostItem(
                   ),
                   onTap: () {
                     SocialCubit.get(context)
-                        .likePost(SocialCubit.get(context).postsId[index]);
+                        .likePost(SocialCubit.get(context).posts[index].postId);
                   },
                 ),
               ],

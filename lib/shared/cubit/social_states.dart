@@ -112,6 +112,17 @@ class SocialCommentsPostsErrorStates extends SocialStates {
 
   SocialCommentsPostsErrorStates(this.error);
 }
+class SocialGetLikesLoadingStates extends SocialStates {}
+
+class SocialGetLikesSuccessStates extends SocialStates {}
+
+
+
+class SocialGetCommentsLoadingStates extends SocialStates {}
+
+class SocialGetCommentsSuccessStates extends SocialStates {}
+
+
 
 class SocialSendMessageSuccessStates extends SocialStates {}
 

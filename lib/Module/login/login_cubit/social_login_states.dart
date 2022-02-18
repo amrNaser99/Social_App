@@ -30,6 +30,8 @@ class SocialLoginSuccessStates extends SocialLoginStates {
   SocialLoginSuccessStates(this.uId);
 
 }
+class SocialSignInWithGoogleSuccessStates extends SocialLoginStates {
+}
 
 class SocialRegisterInitialStates extends SocialLoginStates {}
 

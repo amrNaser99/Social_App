@@ -54,6 +54,30 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
             },
           );
         }
+        if (state is SocialSignInWithGoogleSuccessStates)
+        {
+          NavigateAndFinish(context, SocialLayout());
+          // CacheHelper.saveData(key: 'token', value: token).then((value) {
+          //   print('token Saved Successfully');
+          // }).catchError((error) {
+          //   print(error);
+          // });
+          //
+          // CacheHelper.saveData(
+          //   key: 'uId',
+          //   value: state.uId,
+          // ).then((value) {
+          //   NavigateAndFinish(
+          //     context,
+          //     SocialLayout(),
+          //   );
+          // }).catchError(
+          //   (error) {
+          //     showToast(message: error);
+          //   },
+          // );
+        }
+
       }, builder: (BuildContext context, state) {
         return Scaffold(
             appBar: AppBar(),
@@ -159,10 +183,16 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
                                 ),
                               ],
                             ),
+
+                             Container(
+                              color: Colors.grey[300],
+                              width: 150,
+                               height: 2,
+                            ),
                             const SizedBox(
                               height: 15.0,
                             ),
-                            const Text('Sign In By..'),
+                            const Text('Sign In By..',),
                             const SizedBox(
                               height: 10.0,
                             ),
@@ -170,6 +200,7 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
                               onPressed: ()
                               {
                                 //TODO SignBy Google
+                                SocialLoginCubit.get(context).signInWithGoogle();
                               },
                               icon: CircleAvatar(
                                 backgroundImage: AssetImage('assets/images/google_logo.png'),
