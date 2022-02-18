@@ -610,7 +610,7 @@ Widget buildPostItem(
                   ),
                   onTap: () {
                     SocialCubit.get(context)
-                        .likePost(SocialCubit.get(context).posts[index].postId);
+                        .likePost(SocialCubit.get(context).posts[index]);
                   },
                 ),
               ],

@@ -11,7 +11,7 @@ class splashScreen extends StatelessWidget {
 
     late Widget widget;
     if (uId != null) {
-      widget = const SocialLayout();
+      widget =  SocialLayout();
     } else {
       widget = const OnBoardingScreen();
     }

@@ -36,7 +36,7 @@ class _SocialRegisterScreenState extends State<SocialRegisterScreen> {
             showToast(message: state.error);
           }
           if (state is SocialCreateUserSuccessStates) {
-            NavigateAndFinish(context, const SocialLayout());
+            NavigateAndFinish(context,  SocialLayout());
             showToast(message: 'Register Done Successfully');
           }
         },

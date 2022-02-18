@@ -17,7 +17,8 @@ import 'package:twasol/shared/components/constants.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
-import '../../Module/nav_bar/home/feed_screen.dart';
+import '../../Module/nav_bar/home/home_screen.dart';
+import '../styles/icon_broken.dart';
 
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
@@ -48,6 +49,14 @@ class SocialCubit extends Cubit<SocialStates> {
     ChatsScreen(),
     SettingScreen(),
   ];
+
+  List<Widget> tabs = [
+    Tab(icon: Icon(IconBroken.Home),),
+    Tab(icon: Icon(IconBroken.Location),),
+    Tab(icon: Icon(IconBroken.Chat),),
+    Tab(icon: Icon(IconBroken.Profile),),
+  ];
+
 
   void changeNavItems(int index) {
 
@@ -299,16 +308,16 @@ class SocialCubit extends Cubit<SocialStates> {
       event.docs.forEach((element) async {
         postsId.add(element.id);
         posts.add(PostModel.fromJson(element.data()));
-        // var likes = await element.reference.collection('likes').get();
-        // var comments = await element.reference.collection('comments').get();
-        // await FirebaseFirestore.instance
-        //     .collection('posts')
-        //     .doc(element.id)
-        //     .update({
-        //   'likes': likes.docs.length,
-        //   'comments': comments.docs.length,
-        //   'postId': element.id,
-        // });
+        var likes = await element.reference.collection('likes').get();
+        var comments = await element.reference.collection('comments').get();
+        await FirebaseFirestore.instance
+            .collection('posts')
+            .doc(element.id)
+            .update({
+          'likes': likes.docs.length,
+          'comments': comments.docs.length,
+          'postId': element.id,
+        });
       });
       emit(SocialGetPostsDataSuccessStates());
     });
@@ -375,7 +384,7 @@ class SocialCubit extends Cubit<SocialStates> {
   //     SocialGetPostsDataErrorStates(error);
   //   });
   // }
-  void likePost(String? postId) {
+  void likePost(PostModel post) async {
     LikesModel likesModel = LikesModel(
       userName: userModel!.userName,
       uId: userModel!.uId,
@@ -383,14 +392,15 @@ class SocialCubit extends Cubit<SocialStates> {
       dateTime: DateTime.now().toString(),
     );
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('posts')
-        .doc(postId)
-        .collection('likes')
         .doc(userModel!.uId)
+        .collection('likes')
+        .doc(post.uId)
         .set(likesModel.toMap())
         .then((value) {
       get_Posts();
+      print('${post.uId} Liked Succesfully');
       emit(SocialLikePostsSuccessStates());
     }).catchError((error) {
       emit(SocialLikePostsErrorStates(error));
