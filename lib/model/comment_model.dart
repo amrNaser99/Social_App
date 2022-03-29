@@ -1,15 +1,20 @@
+import 'dart:io';
+
 class CommentModel {
   String? userName;
   String? uId;
   String? comment;
   String? profileImage;
+  String? postId;
   String? dateTime;
+  FileSystemEntity? voice;
 
   CommentModel({
     this.userName,
     this.comment,
     this.uId,
     this.profileImage,
+    this.postId,
     this.dateTime,
   });
 
@@ -18,7 +23,9 @@ class CommentModel {
     comment = json['comment'];
     uId = json['uId'];
     profileImage = json['profileImage'];
+    postId = json['postId'];
     dateTime = json['dateTime'];
+    voice = json['voice'];
   }
 
   Map<String, dynamic> toMap() {
@@ -27,7 +34,9 @@ class CommentModel {
       'comment': comment,
       'uId': uId,
       'profileImage': profileImage,
+      'postId': postId,
       'dateTime': dateTime,
+      'voice': voice,
     };
   }
 }

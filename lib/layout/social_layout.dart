@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/Module/nav_bar/post/post_screen.dart';
 import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
-import 'package:twasol/shared/cubit/social_states.dart';
-import 'package:twasol/shared/styles/colors.dart';
-import 'package:twasol/shared/styles/icon_broken.dart';
+import '../shared/cubit/social_states.dart';
+import '../shared/styles/icon_broken.dart';
 
 class SocialLayout extends StatefulWidget {
   static GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
@@ -43,7 +42,6 @@ class _SocialLayoutState extends State<SocialLayout>
             key: SocialLayout.scaffoldKey,
             appBar: AppBar(
               title: Text(
-                // 'Twasol'
                 cubit.appBarTitles[cubit.currentIndex],
               ),
               // bottom: TabBar(
@@ -52,6 +50,7 @@ class _SocialLayoutState extends State<SocialLayout>
               //   tabs: SocialCubit.get(context).tabs,
               // ),
               actions: [
+
                 IconButton(
                   onPressed: () {},
                   icon: const Icon(
@@ -59,7 +58,10 @@ class _SocialLayoutState extends State<SocialLayout>
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: ()
+                  {
+                    SocialCubit.get(context).searchUsername(userName: 'mona_nasser');
+                  },
                   icon: const Icon(
                     IconBroken.Search,
                   ),
@@ -112,7 +114,7 @@ class _SocialLayoutState extends State<SocialLayout>
             //   children: SocialCubit.get(context).screens,
             // ),
             bottomNavigationBar: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
+              type: BottomNavigationBarType.shifting,
               items: const [
                 BottomNavigationBarItem(
                   icon: Icon(IconBroken.Home),

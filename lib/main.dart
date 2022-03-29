@@ -32,9 +32,8 @@ class MyApp extends StatelessWidget {
   final Widget? startWidget;
 
   MyApp({
-     this.startWidget,
+    this.startWidget,
   });
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -43,7 +42,6 @@ class MyApp extends StatelessWidget {
           create: (context) => SocialCubit()
             ..getDataUser()
             ..getPosts(),
-          
         )
       ],
       child: MaterialApp(
@@ -57,3 +55,19 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+// const AndroidInitializationSettings androidInitialization =
+// AndroidInitializationSettings('launcher_icon');
+// const IOSInitializationSettings iosInitialization =
+// IOSInitializationSettings();
+// const InitializationSettings initializationSettings =
+// InitializationSettings(
+//   android: androidInitialization,
+//   iOS: iosInitialization,
+// );
+// FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+// flutterLocalNotificationsPlugin.initialize(
+// initializationSettings,
+// // onSelectNotification: onSelectNotification,
+// );

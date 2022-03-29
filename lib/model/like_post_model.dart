@@ -1,9 +1,9 @@
 class LikesModel {
-  String? userName;
-  String? uId;
-  String? profileImage;
-  String? postId;
-  String? dateTime;
+  late String? userName;
+  late String? uId;
+  late String? profileImage;
+  late String? postId;
+  late String? dateTime;
 
   LikesModel({
     this.userName,

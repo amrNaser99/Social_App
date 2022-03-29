@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:twasol/layout/social_layout.dart';
 import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
@@ -18,9 +19,6 @@ class PostScreen extends StatelessWidget {
       listener: (BuildContext context, state) {
         if(state is SocialCreatePostSuccessStates)
         {
-          SocialCubit.get(context).changeNavItems(0);
-          SocialCubit.get(context).getPosts();
-          SocialCubit.get(context).removePostImage();
           Navigator.pop(context);
 
         }
@@ -185,21 +183,19 @@ class PostScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: ()
+                        {
+                          //TODO Voice Post
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          // mainAxisSize: MainAxisSize.min,
                           children: const [
-                            Text(
-                              '#',
-                              style: TextStyle(fontSize: 18.0),
-                            ),
-                            // Icon(IconBroken.Shield_Fail),
+                            Icon(IconBroken.Voice_2),
                             SizedBox(
                               width: 5.0,
                             ),
                             Text(
-                              'TAGS',
+                              'Voice Post',
                             ),
                           ],
                         ),

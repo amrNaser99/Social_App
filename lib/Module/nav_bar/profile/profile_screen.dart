@@ -1,24 +1,28 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/Module/edit_profile/edit_profile.dart';
 import 'package:twasol/Module/login/social_login_screen.dart';
 import 'package:twasol/Module/nav_bar/post/post_screen.dart';
 import 'package:twasol/shared/components/components.dart';
-import 'package:twasol/shared/components/constants.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
 import 'package:twasol/shared/styles/colors.dart';
 import 'package:twasol/shared/styles/icon_broken.dart';
 
-class SettingScreen extends StatelessWidget {
-  const SettingScreen({Key? key}) : super(key: key);
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SocialCubit, SocialStates>(
-        listener: (context, state) {},
-        builder: (context, state) {
+    return BlocConsumer<SocialCubit, SocialStates>(listener: (context, state) {
+      if (state is SocialSignOutLoadingStates) {
+        const CircularProgressIndicator();
+      }
+      if (state is SocialSignOutSuccessStates) {
+        showToast(message: 'message', isShort: true);
+        NavigateTo(context, const SocialLoginScreen());
+      }
+    }, builder: (context, state) {
       var userModel = SocialCubit.get(context).userModel;
       return SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -159,8 +163,7 @@ class SettingScreen extends StatelessWidget {
                   child: Row(children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: ()
-                        {
+                        onPressed: () {
                           NavigateTo(context, PostScreen());
                         },
                         child: Text(
@@ -182,7 +185,7 @@ class SettingScreen extends StatelessWidget {
                           EditProfileScreen(),
                         );
                       },
-          `            child: Icon(
+                      child: Icon(
                         IconBroken.Edit,
                         color: mainColor,
                         size: 20.0,
@@ -193,6 +196,20 @@ class SettingScreen extends StatelessWidget {
                 const SizedBox(
                   height: 5.0,
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    height: 240,
+                    color: Colors.black12,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+
                 // Expanded(
                 //   child: ListView.separated(
                 //     itemBuilder: (context, index) => buildPostItem(context, SocialCubit.get(context).posts[index], index) ,
@@ -201,13 +218,11 @@ class SettingScreen extends StatelessWidget {
                 //     itemCount: 10,
                 //   ),
                 // ),
-                defaultButton(text: 'SignOut', function: ()
-                {
-                  FirebaseAuth.instance.signOut();
-                  uId = null;
-                  token = null;
-                  NavigateTo(context, const SocialLoginScreen());
-                }),
+                defaultButton(
+                    text: 'SignOut',
+                    function: () {
+                      SocialCubit.get(context).signOut();
+                    }),
               ],
             ),
           ),

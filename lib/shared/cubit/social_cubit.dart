@@ -4,16 +4,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:record/record.dart';
 import 'package:twasol/Module/nav_bar/chats/chats_screen.dart';
 import 'package:twasol/Module/nav_bar/post/post_screen.dart';
-import 'package:twasol/Module/nav_bar/setting/setting_screen.dart';
 import 'package:twasol/Module/nav_bar/users/users_screen.dart';
 import 'package:twasol/model/comment_model.dart';
 import 'package:twasol/model/like_post_model.dart';
 import 'package:twasol/model/massege_model.dart';
 import 'package:twasol/model/post_model.dart';
 import 'package:twasol/model/user_model.dart';
-import 'package:twasol/shared/components/constants.dart';
+import '../../Module/nav_bar/profile/profile_screen.dart';
+import '../components/constants.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
@@ -29,7 +31,11 @@ class SocialCubit extends Cubit<SocialStates> {
 
   Future<void> getDataUser() async {
     emit(SocialGetUserDataLoadingStates());
-    await FirebaseFirestore.instance.collection('users').doc(uId).get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uId)
+        .get()
+        .then((value) {
       print(value.data());
 
       userModel = UserModel.fromJson(value.data()!);
@@ -39,57 +45,6 @@ class SocialCubit extends Cubit<SocialStates> {
       emit(SocialGetUserDataErrorStates(error.toString()));
     });
   }
-
-  int currentIndex = 0;
-
-  List<Widget> screens = [
-    HomeScreen(),
-    UsersScreen(),
-    PostScreen(),
-    ChatsScreen(),
-    SettingScreen(),
-  ];
-
-  List<Widget> tabs = [
-    Tab(
-      icon: Icon(IconBroken.Home),
-    ),
-    Tab(
-      icon: Icon(IconBroken.Location),
-    ),
-    Tab(
-      icon: Icon(IconBroken.Chat),
-    ),
-    Tab(
-      icon: Icon(IconBroken.Profile),
-    ),
-  ];
-
-  void changeNavItems(int index) {
-    if (index == 0) {
-      getPosts();
-    }
-    if (index == 1) {
-      getAllUsers();
-    }
-    if (index == 3) {
-      getUsersWithChat();
-    }
-    if (index == 2) {
-      emit(SocialNewPostState());
-    } else {
-      currentIndex = index;
-      emit(SocialChangeNavBarState());
-    }
-  }
-
-  List<String> appBarTitles = [
-    'Home',
-    'Chats',
-    'Post',
-    'Users',
-    'Profile',
-  ];
 
   File? profileImage;
 
@@ -255,11 +210,11 @@ class SocialCubit extends Cubit<SocialStates> {
                 );
                 emit(SocialCreatePostSuccessStates());
               }).catchError((error) {
-                emit(SocialCreatePostErrorStates());
+                emit(SocialCreatePostErrorStates(error));
               })
             })
         .catchError((error) {
-      emit(SocialCreatePostErrorStates());
+      emit(SocialCreatePostErrorStates(error));
     });
   }
 
@@ -277,6 +232,7 @@ class SocialCubit extends Cubit<SocialStates> {
       dateTime: DateTime.now().toString(),
       text: text,
       postImage: postImage ?? '',
+      // controller: TextEditingController(),
     );
 
     FirebaseFirestore.instance
@@ -285,7 +241,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .then((value) {
       emit(SocialCreatePostSuccessStates());
     }).catchError((error) {
-      emit(SocialCreatePostErrorStates());
+      emit(SocialCreatePostErrorStates(error));
     });
   }
 
@@ -295,14 +251,18 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   List<PostModel> posts = [];
-  // List<TextEditingController> commentController = [];
+
   List postsId = [];
 
 //get All posts to Feeds -------------------------------------
-  void getPosts() async {
+  bool postsLoadedSuccessfully = false;
+
+  bool userDataLoadedSuccessfully = false;
+
+  Future<void> getPosts() async {
     emit(SocialGetPostsDataLoadingStates());
 
-    await FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection('posts')
         .orderBy('dateTime', descending: true)
         .snapshots()
@@ -326,12 +286,15 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  void likePost(String? postId) async {
+  void likePost({
+    String? postId,
+  }) async {
+    emit(SocialLikePostsLoadingStates());
     LikesModel likesModel = LikesModel(
       userName: userModel!.userName,
       uId: userModel!.uId,
       profileImage: userModel!.image,
-      postId : postId,
+      postId: postId,
       dateTime: DateTime.now().toString(),
     );
 
@@ -352,11 +315,13 @@ class SocialCubit extends Cubit<SocialStates> {
 
   List<LikesModel> peopleReacted = [];
 
-  void getLikes({PostModel? post}) {
-    emit(SocialGetLikesLoadingStates());
+  void getLikes({
+    String? postId,
+  }) {
+    emit(SocialGetLikesCountLoadingStates());
     FirebaseFirestore.instance
         .collection('posts')
-        .doc(post!.postId)
+        .doc(postId)
         .collection('likes')
         .snapshots()
         .listen((event) {
@@ -364,17 +329,67 @@ class SocialCubit extends Cubit<SocialStates> {
       event.docs.forEach((element) {
         peopleReacted.add(LikesModel.fromJson(element.data()));
       });
-      print('peaple reacted ${peopleReacted.length}');
-      emit(SocialGetLikesSuccessStates());
+      if (peopleReacted.contains(userModel!.uId)) {
+        // disLikePost();
+      }
+      print('peaole reacted ${peopleReacted.length}');
+
+      emit(SocialGetLikesCountSuccessStates());
+      emit(SocialOpenLikeSheetStates());
     });
   }
 
-  void commentPost(String postId, String commentText) {
-    CommentModel commentPost = CommentModel(
+  void disLikePost({
+    String? postId,
+  }) {
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('likes')
+        .doc(userModel!.uId)
+        .delete()
+        .then((value) {
+      getPosts();
+      emit(SocialDisLikePostSuccessState());
+    }).catchError((error) {
+      emit(SocialDisLikePostErrorState(error));
+      print(error.toString());
+    });
+  }
+
+  Future<bool> likedByMe({
+    String? postId,
+  }) async {
+    emit(SocialLikedByMeCheckedLoadingState());
+    bool isLikedByMe = false;
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .get()
+        .then((event) async {
+      var likes = await event.reference.collection('likes').get();
+      likes.docs.forEach((element) {
+        if (element.id == userModel!.uId) {
+          isLikedByMe = true;
+          disLikePost(postId: postId);
+        }
+      });
+      if (isLikedByMe == false) {
+        likePost(postId: postId);
+      }
+      print(isLikedByMe);
+      emit(SocialLikedByMeCheckedSuccessState());
+    });
+    return isLikedByMe;
+  }
+
+  void commentPost({required String postId, required String commentText}) {
+    CommentModel commentModel = CommentModel(
       userName: userModel!.userName,
       comment: commentText,
       uId: userModel!.uId,
       profileImage: userModel!.image,
+      postId: postId,
       dateTime: DateTime.now().toString(),
     );
 
@@ -384,19 +399,22 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('comments')
         .doc(userModel!.uId)
         .set(
-          commentPost.toMap(),
+          commentModel.toMap(),
         )
         .then((value) {
-      // getPosts();
+      getPosts();
+      print('${userModel!.uId} Comment Successfully');
+
       emit(SocialCommentsPostsSuccessStates());
+      emit(SocialOpenCommentSheetStates());
     }).catchError((error) {
       emit(SocialCommentsPostsSuccessStates());
     });
   }
 
-  List<CommentModel> Comments = [];
+  List<CommentModel> peopleComments = [];
 
-  void getComments(String postId) {
+  void getComments({String? postId}) {
     emit(SocialGetCommentsLoadingStates());
 
     FirebaseFirestore.instance
@@ -405,11 +423,13 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('comments')
         .snapshots()
         .listen((event) {
-      Comments = [];
+      peopleComments = [];
       event.docs.forEach((element) {
-        Comments.add(CommentModel.fromJson(element.data()));
+        peopleComments.add(CommentModel.fromJson(element.data()));
       });
+      print('number of people Comments ${peopleComments.length}');
       emit(SocialGetCommentsSuccessStates());
+      emit(SocialOpenCommentSheetStates());
     });
   }
 
@@ -529,16 +549,15 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   void deletePost({
-    required PostModel post,
-    required int index,
+    required String? postId,
   }) {
     FirebaseFirestore.instance
         .collection('posts')
-        .doc(postsId[index])
+        .doc(postId)
         .delete()
         .then((value) {
-      print(postsId[index]);
-      posts.remove(postsId[index]);
+      print(postId);
+      posts.remove(postsId);
       // posts.clear();
       getPosts();
       emit(SocialDeletePostSuccessStates());
@@ -546,11 +565,147 @@ class SocialCubit extends Cubit<SocialStates> {
       emit(SocialDeletePostErrorStates(error.toString()));
     });
   }
-}
+
 // Sign Out ---------------
-void signOut() async
-{
-  await FirebaseAuth.instance.signOut();
-  token = null;
-  uId = null;
+  void signOut() async {
+    emit(SocialSignOutLoadingStates());
+    await FirebaseAuth.instance.signOut();
+    token = null;
+    uId = null;
+
+    emit(SocialSignOutSuccessStates());
+  }
+
+  Future<void> searchUsername({required String userName}) async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('userName' == userName)
+        .get()
+        .then((value) {
+      print(value.docs.length);
+    }).catchError((error) {
+      emit(SocialSearchUserNameErrorStates(error));
+    });
+  }
+
+  int currentIndex = 0;
+
+  List<Widget> screens = [
+    HomeScreen(),
+    const ChatsScreen(),
+    PostScreen(),
+    const UsersScreen(),
+    const ProfileScreen(),
+  ];
+
+  List<Widget> tabs = [
+    Tab(
+      icon: Icon(IconBroken.Home),
+    ),
+    Tab(
+      icon: Icon(IconBroken.Location),
+    ),
+    Tab(
+      icon: Icon(IconBroken.Chat),
+    ),
+    Tab(
+      icon: Icon(IconBroken.Profile),
+    ),
+  ];
+
+  void changeNavItems(int index) {
+    if (index == 0) {
+      getPosts();
+    }
+    if (index == 1) {
+      getAllUsers();
+    }
+    if (index == 3) {
+      getUsersWithChat();
+    }
+    if (index == 2) {
+      emit(SocialNewPostState());
+    } else {
+      currentIndex = index;
+      emit(SocialChangeNavBarState());
+    }
+  }
+
+  List<String> appBarTitles = [
+    'Home',
+    'Chats',
+    'Post',
+    'Users',
+    'Profile',
+  ];
+
+  List appBarIcons = [
+    [
+      IconButton(
+        onPressed: () {},
+        icon: const Icon(
+          IconBroken.Notification,
+        ),
+      ),
+      IconButton(
+        onPressed: () {},
+        icon: const Icon(
+          IconBroken.Search,
+        ),
+      ),
+    ],
+    [],
+  ];
+
+  bool isRecord = false;
+  Record audioRecorder = Record();
+
+
+  Future voiceStartRecord() async {
+    Map<Permission, PermissionStatus> permissions = await [
+      Permission.storage,
+      Permission.microphone,
+      Permission.manageExternalStorage,
+    ].request();
+
+    bool permissionsGranted = permissions[Permission.storage]!.isGranted &&
+        permissions[Permission.microphone]!.isGranted && permissions[Permission.manageExternalStorage]!.isGranted;
+
+    if (permissionsGranted) {
+      print('in permissionsGranted');
+      Directory appFolder = Directory(Paths.recording);
+      bool appFolderExists = await appFolder.exists();
+      if (!appFolderExists) {
+        final created = await appFolder.create(recursive: true);
+        print(created.path);
+      }
+      final filepath = Paths.recording +
+          '/' +
+          DateTime
+              .now()
+              .millisecondsSinceEpoch
+              .toString() +
+          '.wav';
+      print(filepath);
+
+      await audioRecorder.start(path: filepath);
+
+      isRecord = true;
+      emit(SocialVoiceRecordOn());
+    }
+  }
+  Future voiceStopRecord() async
+  {
+    String? path = await audioRecorder.stop();
+    emit(SocialVoiceRecordOff());
+    print('Output path $path');
+  }
+  Future voiceResumeRecord() async
+  {
+    await audioRecorder.resume();
+    emit(SocialVoiceRecordOn());
+  }
+  void voiceRecorder() {
+    emit(SocialVoiceRecorderLoadingStates());
+  }
 }

@@ -19,6 +19,7 @@ class splashScreen extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
+        extendBodyBehindAppBar: true,
         body: EasySplashScreen(
           logo: Image.asset(
             'assets/images/logo.png',

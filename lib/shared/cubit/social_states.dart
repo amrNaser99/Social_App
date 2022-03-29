@@ -69,7 +69,12 @@ class SocialCreatePostLoadingStates extends SocialStates {}
 
 class SocialCreatePostSuccessStates extends SocialStates {}
 
-class SocialCreatePostErrorStates extends SocialStates {}
+class SocialCreatePostErrorStates extends SocialStates {
+  final String error;
+
+  SocialCreatePostErrorStates(this.error);
+
+}
 
 class SocialRemovePostImageStates extends SocialStates {}
 
@@ -112,16 +117,33 @@ class SocialCommentsPostsErrorStates extends SocialStates {
 
   SocialCommentsPostsErrorStates(this.error);
 }
-class SocialGetLikesLoadingStates extends SocialStates {}
+class SocialLikedLoadingStates extends SocialStates {}
+class SocialLikedSuccessStates extends SocialStates {}
+class SocialLikedByMeCheckedLoadingState extends SocialStates {}
+class SocialLikedByMeCheckedSuccessState extends SocialStates {}
+class SocialLikedByMeCheckedErrorState extends SocialStates {
+  final String error;
 
-class SocialGetLikesSuccessStates extends SocialStates {}
+  SocialLikedByMeCheckedErrorState(this.error);
+}
+
+class SocialDisLikePostSuccessState extends SocialStates {}
+class SocialDisLikePostErrorState extends SocialStates {
+  final String error ;
+
+  SocialDisLikePostErrorState(this.error);
+}
+
+
+class SocialGetLikesCountLoadingStates extends SocialStates {}
+class SocialGetLikesCountSuccessStates extends SocialStates {}
+
 
 
 
 class SocialGetCommentsLoadingStates extends SocialStates {}
 
 class SocialGetCommentsSuccessStates extends SocialStates {}
-
 
 
 class SocialSendMessageSuccessStates extends SocialStates {}
@@ -138,4 +160,31 @@ class SocialDeletePostErrorStates extends SocialStates {
   final String error;
 
   SocialDeletePostErrorStates(this.error);
+}
+class SocialSignOutLoadingStates extends SocialStates {}
+class SocialSignOutSuccessStates extends SocialStates {}
+class SocialSignOutErrorStates extends SocialStates {
+  final String error;
+
+  SocialSignOutErrorStates(this.error);
+
+}
+class SocialSearchUserNameLoadingStates extends SocialStates {}
+class SocialSearchUserNameSuccessStates extends SocialStates {}
+class SocialSearchUserNameErrorStates extends SocialStates {
+  final String error;
+
+  SocialSearchUserNameErrorStates(this.error);
+}
+class SocialOpenLikeSheetStates extends SocialStates {}
+class SocialOpenCommentSheetStates extends SocialStates {}
+
+class SocialVoiceRecordOn extends SocialStates {}
+class SocialVoiceRecordOff extends SocialStates {}
+
+class SocialVoiceRecorderLoadingStates extends SocialStates {}
+class SocialVoiceRecorderSuccessStates extends SocialStates {}
+class SocialVoiceRecorderErrorStates extends SocialStates {
+  final String error;
+  SocialVoiceRecorderErrorStates(this.error);
 }

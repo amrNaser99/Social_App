@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:twasol/shared/styles/colors.dart';
-import 'package:twasol/shared/styles/icon_broken.dart';
-
+import 'package:twasol/model/comment_model.dart';
+import 'package:twasol/model/like_post_model.dart';
+import '../../shared/styles/colors.dart';
+import '../../shared/styles/icon_broken.dart';
 import '../../Module/nav_bar/chats/chat_details/chat_details_screen.dart';
 import '../../model/post_model.dart';
 import '../../model/user_model.dart';
@@ -95,13 +98,14 @@ Widget defaultTextButton({
 
 void showToast({
   required String message,
+  bool isShort = false ,
 }) {
   Fluttertoast.showToast(
       msg: message,
-      toastLength: Toast.LENGTH_LONG,
+      toastLength: isShort ?  Toast.LENGTH_SHORT : Toast.LENGTH_LONG ,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 5,
-      backgroundColor: Colors.green,
+      // backgroundColor: Colors.green,
       textColor: Colors.white,
       fontSize: 16.0);
 }
@@ -240,7 +244,6 @@ Widget buildChatItem(context, UserModel model) => InkWell(
               backgroundImage: NetworkImage(
                 '${model.image}',
               ),
-              // AssetImage('assets/images/deafault.jpg'),
             ),
             const SizedBox(
               width: 15,
@@ -262,13 +265,200 @@ Widget buildChatItem(context, UserModel model) => InkWell(
       ),
     );
 
-Widget buildListSheet({required BuildContext context, model, index}) =>
-    Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
+Widget buildLikeListSheet(
+    {required BuildContext context, required LikesModel model, index}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 25.0,
+              backgroundImage: NetworkImage(
+                '${model.profileImage}',
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '${model.userName}',
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              height: 1.4,
+                            ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Icon(
+                        Icons.check_circle,
+                        color: mainColor,
+                        size: 16.0,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    DateFormat.yMMMMEEEEd()
+                        .format(DateTime.parse(model.dateTime!)),
+                    style: Theme.of(context).textTheme.caption!.copyWith(
+                          height: 1.4,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                IconBroken.Heart,
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget buildCommentListSheet(
+    {required BuildContext context, required CommentModel model, index}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 25.0,
+              backgroundImage: NetworkImage(
+                '${model.profileImage}',
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '${model.userName}',
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              fontWeight: FontWeight.bold,
+                              height: 1.4,
+                            ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      Icon(
+                        Icons.check_circle,
+                        color: mainColor,
+                        size: 16.0,
+                      ),
+                    ],
+                  ),
+                  Text(
+                    DateFormat.yMMMMEEEEd()
+                        .format(DateTime.parse(model.dateTime!)),
+                    style: Theme.of(context).textTheme.caption!.copyWith(
+                          height: 1.4,
+                        ),
+                  ),
+                  const SizedBox(
+                    height: 1,
+                  ),
+                  Text(
+                    '${model.comment}',
+                    style: Theme.of(context).textTheme.labelMedium!
+                        .copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: const Icon(
+                IconBroken.Heart,
+              ),
+              onPressed: () {},
+            ),
+            const SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+Widget buildVoiceSheet({required BuildContext context,})
+{
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 20),
+    child: Card(
+      elevation: 3,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            CircleAvatar(
+              radius: 25.0,
+              backgroundColor: Colors.grey ,
+              child: Icon(IconBroken.Voice_2),
+            ),
+          ],
+        ),
+        ),
+      ),
+  );
+}
+
+Widget buildPostItem(
+  context,
+  PostModel model,
+) {
+  var commentController = model.controller;
+  SocialCubit cubit = BlocProvider.of(context);
+  // bool isLikedByMe = cubit.likedByMe(postId: model.postId) as bool;
+  return Card(
+    clipBehavior: Clip.antiAliasWithSaveLayer,
+    elevation: 5.0,
+
+    margin: const EdgeInsets.symmetric(
+      horizontal: 8.0,
+    ),
+
+    child: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
               CircleAvatar(
                 radius: 25.0,
@@ -287,13 +477,11 @@ Widget buildListSheet({required BuildContext context, model, index}) =>
                       children: [
                         Text(
                           '${model.userName}',
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle1!
-                              .copyWith(
-                            fontWeight: FontWeight.bold,
-                            height: 1.4,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.subtitle1!.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    height: 1.4,
+                                  ),
                         ),
                         const SizedBox(
                           width: 5,
@@ -306,13 +494,11 @@ Widget buildListSheet({required BuildContext context, model, index}) =>
                       ],
                     ),
                     Text(
-                      // '${model.dateTime!}',
                       DateFormat.yMMMMEEEEd()
                           .format(DateTime.parse(model.dateTime!)),
-                      style:
-                      Theme.of(context).textTheme.caption!.copyWith(
-                        height: 1.4,
-                      ),
+                      style: Theme.of(context).textTheme.caption!.copyWith(
+                            height: 1.4,
+                          ),
                     ),
                   ],
                 ),
@@ -323,8 +509,7 @@ Widget buildListSheet({required BuildContext context, model, index}) =>
               //TODO More
               IconButton(
                 onPressed: () {
-                  SocialCubit.get(context)
-                      .deletePost(post: model, index: index);
+                  cubit.deletePost(postId: model.postId);
                 },
                 icon: const Icon(
                   IconBroken.More_Circle,
@@ -332,329 +517,240 @@ Widget buildListSheet({required BuildContext context, model, index}) =>
               ),
             ],
           ),
-        ),
-      ),
-    );
+          Padding(
+            padding: const EdgeInsetsDirectional.only(
+              top: 15.0,
+            ),
+            child: Container(
+              width: double.infinity,
+              height: 1.0,
+              color: Colors.grey[300],
+            ),
+          ),
+          //Text Body
+          const SizedBox(
+            height: 10,
+          ),
 
-
-Widget buildPostItem(
-  context,
-  PostModel model,
-  index,
-) =>
-    Card(
-      clipBehavior: Clip.antiAliasWithSaveLayer,
-      elevation: 5.0,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 8.0,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 25.0,
-                  backgroundImage: NetworkImage(
-                    '${model.image}',
+          if (model.text != null)
+            Text(
+              '${model.text}',
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  fontSize: 14.0,
+                  height: 1.3,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black),
+            ),
+          if (model.postImage != "")
+            Padding(
+              padding: const EdgeInsetsDirectional.only(
+                top: 10.0,
+              ),
+              child: Container(
+                width: double.infinity,
+                height: 140.0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4.0),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      '${model.postImage}',
+                    ),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(
-                  width: 15,
-                ),
+              ),
+            ),
+
+          // emojies bar
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              vertical: 5.0,
+            ),
+            child: Row(
+              children: [
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                  child: InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5.0,
+                      ),
+                      child: Row(
                         children: [
-                          Text(
-                            '${model.userName}',
-                            style:
-                                Theme.of(context).textTheme.subtitle1!.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      height: 1.4,
-                                    ),
+                          const Icon(
+                            IconBroken.Heart,
+                            size: 20,
+                            color: Colors.red,
                           ),
                           const SizedBox(
-                            width: 5,
+                            width: 5.0,
                           ),
-                          Icon(
-                            Icons.check_circle,
-                            color: mainColor,
-                            size: 16.0,
+                          //TODO Likes
+                          Text(
+                            "${model.likes} Likes",
+                            style: Theme.of(context).textTheme.caption,
                           ),
                         ],
                       ),
-                      Text(
-                        // '${model.dateTime!}',
-                        DateFormat.yMMMMEEEEd()
-                            .format(DateTime.parse(model.dateTime!)),
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                              height: 1.4,
+                    ),
+                    //TODO onTap show Liked Users
+                    onTap: () {
+                      cubit.getLikes(postId: model.postId);
+                      print('onTap show Liked Users');
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 5.0,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            IconBroken.More_Circle,
+                            size: 20,
+                            color: mainColor,
+                          ),
+                          const SizedBox(
+                            width: 5.0,
+                          ),
+                          Text(
+                            //TODO Comments
+                            '${model.nComments} Comments',
+                            style: Theme.of(context).textTheme.caption,
+                          ),
+                        ],
+                      ),
+                    ),
+                    onTap: () {
+                      cubit
+                          .getComments(postId: model.postId);
+                      print('onTap show Comments Users');
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              bottom: 5.0,
+            ),
+            child: Container(
+              width: double.infinity,
+              height: 1.0,
+              color: Colors.grey[300],
+            ),
+          ),
+          Row(
+            children: [
+              // ----------comment---------------
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 5.0,
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 18.0,
+                        backgroundImage: NetworkImage(
+                          '${cubit.userModel!.image}',
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                        child: Container(
+                          height: 30.0,
+                          child: TextFormField(
+                            //TODO Comments
+                            controller: commentController,
+                            // enableSuggestions: true,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Write a comment...',
+                              hintStyle: Theme.of(context).textTheme.caption,
                             ),
+                            onFieldSubmitted: (String value) {
+                              cubit.commentPost(
+                                  postId: model.postId!, commentText: value);
+                              print('Comment Done');
+                              commentController.clear();
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(
-                  width: 15,
+              ),
+
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        IconBroken.Heart,
+                        size: 20,
+                        color: Colors.red ,
+                      ),
+                      const SizedBox(
+                        width: 5.0,
+                      ),
+                      Text(
+                        'Like',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ],
+                  ),
                 ),
-                //TODO More
-                IconButton(
+                onTap: () {
+                  cubit.likePost(postId: model.postId);
+                },
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              Container(
+                width: 1,
+                height: 20,
+                color: Colors.black45,
+              ),
+              const SizedBox(
+                width: 4,
+              ),
+              //--voice Comment--
+              GestureDetector(
+                onLongPressStart: (lpd)
+                {
+                  cubit.voiceStartRecord();
+                },
+                onLongPressEnd: (lpd)
+                {
+                  cubit.voiceStopRecord();
+                },
+                child: IconButton(
+
                   onPressed: () {
-                    SocialCubit.get(context)
-                        .deletePost(post: model, index: index);
+                    // cubit.voiceRecorder();
+                    showToast(message: 'voice Done');
                   },
                   icon: const Icon(
-                    IconBroken.More_Circle,
+                    IconBroken.Voice,
+                    size: 22,
+                    color: Colors.red,
                   ),
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 15.0,
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 1.0,
-                color: Colors.grey[300],
-              ),
-            ),
-            //Text Body
-            if (model.text != null)
-              const SizedBox(
-                height: 5,
-              ),
-            if (model.text != null)
-              Text(
-                '${model.text}',
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    fontSize: 14.0,
-                    height: 1.3,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black),
-              ),
-            if (model.postImage != "")
-              Padding(
-                padding: const EdgeInsetsDirectional.only(
-                  top: 10.0,
-                ),
-                child: Container(
-                  width: double.infinity,
-                  height: 140.0,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4.0),
-                    image: DecorationImage(
-                      image: NetworkImage(
-                        '${model.postImage}',
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-
-            // emojies bar
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 5.0,
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              IconBroken.Heart,
-                              size: 20,
-                              color: Colors.red,
-                            ),
-                            const SizedBox(
-                              width: 5.0,
-                            ),
-                            //TODO Likes
-                            Text(
-                              "${model.likes} Likes",
-                              style: Theme.of(context).textTheme.caption,
-                            ),
-                          ],
-                        ),
-                      ),
-                      //TODO onTap show Liked Users
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            // isScrollControlled: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(25)),
-                            ),
-                            builder: (context) {
-                              return Container(
-                                width: MediaQuery.of(context).size.height * 0.3,
-                                color: Colors.white,
-                                child: Column(
-                                  // mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    //black bar
-                                    Container(
-                                      width: MediaQuery.of(context).size.width * 0.25,
-                                      height: 5,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                    //user who like
-                                    Expanded(
-                                      child: ListView.separated(
-                                        physics: const BouncingScrollPhysics(),
-                                  itemBuilder: (context, index) => buildListSheet(context: context,model: SocialCubit.get(context).peopleReacted[index],index: index),
-                                  separatorBuilder:  (context, index) => const SizedBox(height: 2,),
-                                  itemCount: SocialCubit.get(context).peopleReacted.length,
-                                ),
-                                    ),
-                                  ],
-                                ),
-                              );
-
-                            });
-                        // NavigateTo(context, LikesScreen());
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 5.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Icon(
-                              IconBroken.More_Circle,
-                              size: 20,
-                              color: mainColor,
-                            ),
-                            const SizedBox(
-                              width: 5.0,
-                            ),
-                            Text(
-                              //TODO Comments
-                              // '0 Comments',
-                              '${model.nComments} Comments',
-                              style: Theme.of(context).textTheme.caption,
-                            ),
-                          ],
-                        ),
-                      ),
-                      onTap: () {
-                        // NavigateTo(context, CommentScreen(model.postId));
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                bottom: 5.0,
-              ),
-              child: Container(
-                width: double.infinity,
-                height: 1.0,
-                color: Colors.grey[300],
-              ),
-            ),
-            Row(
-              children: [
-                //comment
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 5.0,
-                    ),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 18.0,
-                          backgroundImage: NetworkImage(
-                            '${SocialCubit.get(context).userModel!.image}',
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: Container(
-                            height: 30.0,
-                            child: TextFormField(
-                              //TODO Comments
-                              // controller: SocialCubit.get(context)
-                              //     .commentController[index],
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Write a comment...',
-                                hintStyle: Theme.of(context).textTheme.caption,
-                              ),
-                              onFieldSubmitted: (String value) {
-                                // SocialCubit.get(context).commentPost(
-                                //     SocialCubit.get(context).postsId[index],
-                                //     SocialCubit.get(context)
-                                //         .commentController[index]
-                                //         .text);
-                                // SocialCubit.get(context)
-                                //     .commentController[index]
-                                //     .clear();
-                                // SocialCubit.get(context).getDataUser();
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(
-                          IconBroken.Heart,
-                          size: 20,
-                          color: Colors.red,
-                        ),
-                        const SizedBox(
-                          width: 5.0,
-                        ),
-                        Text(
-                          'Like',
-                          style: Theme.of(context).textTheme.caption,
-                        ),
-                      ],
-                    ),
-                  ),
-                  onTap: () {
-                    SocialCubit.get(context)
-                        .likePost(SocialCubit.get(context).posts[index].postId);
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+              )
+            ],
+          ),
+        ],
       ),
-    );
+    ),
+  );
+}
