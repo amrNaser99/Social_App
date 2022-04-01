@@ -19,7 +19,11 @@ class PostScreen extends StatelessWidget {
       listener: (BuildContext context, state) {
         if(state is SocialCreatePostSuccessStates)
         {
+
+          SocialCubit.get(context).currentIndex =0;
+          SocialCubit.get(context).changeNavItems(0);
           Navigator.pop(context);
+          // NavigateAndFinish(context, SocialLayout());
 
         }
       },
@@ -186,6 +190,7 @@ class PostScreen extends StatelessWidget {
                         onPressed: ()
                         {
                           //TODO Voice Post
+                          SocialCubit.get(context).voiceRecorderWithBottomSheet();
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

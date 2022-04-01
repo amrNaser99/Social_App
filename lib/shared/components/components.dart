@@ -98,11 +98,11 @@ Widget defaultTextButton({
 
 void showToast({
   required String message,
-  bool isShort = false ,
+  bool isShort = false,
 }) {
   Fluttertoast.showToast(
       msg: message,
-      toastLength: isShort ?  Toast.LENGTH_SHORT : Toast.LENGTH_LONG ,
+      toastLength: isShort ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 5,
       // backgroundColor: Colors.green,
@@ -388,14 +388,33 @@ Widget buildCommentListSheet(
                   const SizedBox(
                     height: 1,
                   ),
-                  Text(
-                    '${model.comment}',
-                    style: Theme.of(context).textTheme.labelMedium!
-                        .copyWith(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+
+                  // if(model.comment != null)
+                  //   Text(
+                  //   '${model.comment}',
+                  //   style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                  //         fontSize: 14,
+                  //         fontWeight: FontWeight.w600,
+                  //       ),
+                  // ),
+                  // if(model.voice != null)
+                    //TODO audioPlayer
+                  Container(
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(8.0),
+                      color: Colors.white12,),
+                    child: Row(
+                      children: [
+                        Text(
+                          '${model.comment}',
+                          style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
+                      ],
+                    ),
                   ),
+
                 ],
               ),
             ),
@@ -415,8 +434,9 @@ Widget buildCommentListSheet(
   );
 }
 
-Widget buildVoiceSheet({required BuildContext context,})
-{
+Widget buildVoiceSheet({
+  required BuildContext context,
+}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 20),
     child: Card(
@@ -428,13 +448,13 @@ Widget buildVoiceSheet({required BuildContext context,})
           children: const [
             CircleAvatar(
               radius: 25.0,
-              backgroundColor: Colors.grey ,
+              backgroundColor: Colors.grey,
               child: Icon(IconBroken.Voice_2),
             ),
           ],
         ),
-        ),
       ),
+    ),
   );
 }
 
@@ -448,11 +468,9 @@ Widget buildPostItem(
   return Card(
     clipBehavior: Clip.antiAliasWithSaveLayer,
     elevation: 5.0,
-
     margin: const EdgeInsets.symmetric(
       horizontal: 8.0,
     ),
-
     child: Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -625,8 +643,7 @@ Widget buildPostItem(
                       ),
                     ),
                     onTap: () {
-                      cubit
-                          .getComments(postId: model.postId);
+                      cubit.getComments(postId: model.postId);
                       print('onTap show Comments Users');
                     },
                   ),
@@ -697,7 +714,7 @@ Widget buildPostItem(
                       const Icon(
                         IconBroken.Heart,
                         size: 20,
-                        color: Colors.red ,
+                        color: Colors.red,
                       ),
                       const SizedBox(
                         width: 5.0,
@@ -726,24 +743,24 @@ Widget buildPostItem(
               ),
               //--voice Comment--
               GestureDetector(
-                onLongPressStart: (lpd)
-                {
-                  cubit.voiceStartRecord();
+                onLongPressStart: (lpd) {
+                  cubit.checkRecording(postId: model.postId);
                 },
-                onLongPressEnd: (lpd)
-                {
-                  cubit.voiceStopRecord();
+                onLongPressEnd: (lpd) {
+                  cubit.checkRecording(postId: model.postId);
                 },
-                child: IconButton(
-
-                  onPressed: () {
-                    // cubit.voiceRecorder();
-                    showToast(message: 'voice Done');
-                  },
-                  icon: const Icon(
-                    IconBroken.Voice,
-                    size: 22,
-                    color: Colors.red,
+                child: CircleAvatar(
+                  radius: 24,
+                  backgroundColor: cubit.isRecord ? Colors.red : Colors.white12,
+                  child: IconButton(
+                    onPressed: () {
+                      cubit.checkRecording(postId: model.postId);
+                    },
+                    icon: Icon(
+                      IconBroken.Voice,
+                      size: 22,
+                      color: cubit.isRecord ? Colors.white : Colors.red,
+                    ),
                   ),
                 ),
               )

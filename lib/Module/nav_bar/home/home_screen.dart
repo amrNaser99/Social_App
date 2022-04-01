@@ -64,7 +64,7 @@ class HomeScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
-                              children:  [
+                              children: [
                                 const Icon(
                                   IconBroken.Heart,
                                   color: Colors.red,
@@ -78,7 +78,9 @@ class HomeScreen extends StatelessWidget {
                                     fontSize: 16,
                                   ),
                                 ),
-                                const SizedBox(width: 3,),
+                                const SizedBox(
+                                  width: 3,
+                                ),
                                 const Text(
                                   'Likes',
                                   style: TextStyle(
@@ -87,7 +89,6 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-
 
                             const SizedBox(
                               height: 10,
@@ -182,6 +183,62 @@ class HomeScreen extends StatelessWidget {
                                 itemCount: SocialCubit.get(context)
                                     .peopleComments
                                     .length,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    });
+              }
+              if (state
+                  is SocialVoiceRecorderWithBottomSheetWithBottomSheetLoadingStates) {
+                showModalBottomSheet(
+                    context: context,
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(25)),
+                    ),
+                    builder: (context) {
+                      return Container(
+                        color: Colors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          // mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            //black bar
+                            Container(
+                              alignment: AlignmentDirectional.center,
+                              width: MediaQuery.of(context).size.width * 0.35,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.black54,
+                              ),
+                            ),
+                            //user who like
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            Expanded(
+                              child: GestureDetector(
+                                onLongPressStart: (lpd)
+                                {
+                                  SocialCubit.get(context).voiceStartRecord();
+                                },
+                                onLongPressEnd: (lpd)
+                                {
+                                  //TODO in voiceStopRecord
+                                  SocialCubit.get(context).voiceStopRecord();
+                                },
+                                child: IconButton(
+                                  iconSize: 20,
+                                   icon: const Icon(IconBroken.Voice_2)
+                                  , onPressed: () { print('asdakjhjjkokji93'); },
+                                ),
                               ),
                             ),
                           ],

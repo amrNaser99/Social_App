@@ -1,5 +1,3 @@
-import 'dart:io';
-
 class CommentModel {
   String? userName;
   String? uId;
@@ -7,15 +5,16 @@ class CommentModel {
   String? profileImage;
   String? postId;
   String? dateTime;
-  FileSystemEntity? voice;
+  var voice;
 
   CommentModel({
     this.userName,
-    this.comment,
     this.uId,
     this.profileImage,
     this.postId,
     this.dateTime,
+    this.comment,
+    this.voice,
   });
 
   CommentModel.fromJson(Map<String, dynamic> json) {

@@ -14,6 +14,7 @@ import 'package:twasol/model/like_post_model.dart';
 import 'package:twasol/model/massege_model.dart';
 import 'package:twasol/model/post_model.dart';
 import 'package:twasol/model/user_model.dart';
+import 'package:twasol/shared/components/components.dart';
 import '../../Module/nav_bar/profile/profile_screen.dart';
 import '../components/constants.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
@@ -42,7 +43,7 @@ class SocialCubit extends Cubit<SocialStates> {
       emit(SocialGetUserDataSuccessStates());
     }).catchError((error) {
       print(error.toString());
-      emit(SocialGetUserDataErrorStates(error.toString()));
+      emit(SocialGetUserDataErrorStates(error));
     });
   }
 
@@ -79,7 +80,7 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  ImageProvider? putProfileImage() {
+  Future<ImageProvider?> putProfileImage() async {
     if (coverImage == null) {
       return NetworkImage(
         '${userModel!.image}',
@@ -118,7 +119,7 @@ class SocialCubit extends Cubit<SocialStates> {
 
   String coverImageUrl = '';
 
-  Future uploadCoverImage({
+  Future<void> uploadCoverImage({
     required String userName,
     required String bio,
   }) async {
@@ -144,12 +145,12 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  void updateUser({
+  Future<void> updateUser({
     required String userName,
     required String bio,
     String? image,
     String? cover,
-  }) {
+  }) async {
     UserModel model = UserModel(
       userName: userName,
       email: userModel!.email,
@@ -161,7 +162,7 @@ class SocialCubit extends Cubit<SocialStates> {
       uId: userModel!.uId,
     );
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('users')
         .doc(uId)
         .update(model.toMap())
@@ -189,7 +190,7 @@ class SocialCubit extends Cubit<SocialStates> {
     }
   }
 
-  Future uploadPostImage({
+  Future<void> uploadPostImage({
     required String dateTime,
     required String text,
   }) async {
@@ -218,11 +219,11 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  void createPost({
+  Future<void> createPost({
     required String dateTime,
     required String text,
     String? postImage,
-  }) {
+  }) async {
     emit(SocialCreatePostLoadingStates());
 
     PostModel model = PostModel(
@@ -235,7 +236,7 @@ class SocialCubit extends Cubit<SocialStates> {
       // controller: TextEditingController(),
     );
 
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('posts')
         .add(model.toMap())
         .then((value) {
@@ -660,8 +661,9 @@ class SocialCubit extends Cubit<SocialStates> {
   bool isRecord = false;
   Record audioRecorder = Record();
 
-
-  Future voiceStartRecord() async {
+  Future voiceStartRecord({
+    String? postId,
+  }) async {
     Map<Permission, PermissionStatus> permissions = await [
       Permission.storage,
       Permission.microphone,
@@ -669,43 +671,100 @@ class SocialCubit extends Cubit<SocialStates> {
     ].request();
 
     bool permissionsGranted = permissions[Permission.storage]!.isGranted &&
-        permissions[Permission.microphone]!.isGranted && permissions[Permission.manageExternalStorage]!.isGranted;
+        permissions[Permission.microphone]!.isGranted &&
+        permissions[Permission.manageExternalStorage]!.isGranted;
 
     if (permissionsGranted) {
       print('in permissionsGranted');
       Directory appFolder = Directory(Paths.recording);
+
       bool appFolderExists = await appFolder.exists();
       if (!appFolderExists) {
         final created = await appFolder.create(recursive: true);
         print(created.path);
       }
-      final filepath = Paths.recording +
-          '/' +
-          DateTime
-              .now()
-              .millisecondsSinceEpoch
-              .toString() +
-          '.wav';
-      print(filepath);
+      final String filepath;
 
-      await audioRecorder.start(path: filepath);
+      if (postId != null) {
+        filepath = Paths.recording +
+            '/' +
+            postId.toString() +
+            '_' +
+            DateTime.now().millisecondsSinceEpoch.toString() +
+            '.wav';
+        print(filepath);
+      } else {
+        postId = 'postVoice';
+        filepath = Paths.recording +
+            '/' +
+            postId.toString() +
+            '_' +
+            DateTime.now().millisecondsSinceEpoch.toString() +
+            '.wav';
+
+        print(filepath);
+      }
 
       isRecord = true;
+
+      await audioRecorder.start(
+        path: filepath,
+      );
       emit(SocialVoiceRecordOn());
     }
   }
-  Future voiceStopRecord() async
-  {
+
+  Future voiceStopRecord({String? postId}) async {
     String? path = await audioRecorder.stop();
     emit(SocialVoiceRecordOff());
     print('Output path $path');
+
+    uploadVoiceRecord(filePath: path, postId: postId);
   }
-  Future voiceResumeRecord() async
-  {
+
+  void uploadVoiceRecord({
+    String? filePath,
+    String? postId,
+  }) async {
+    await firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('voiceRecord/${Uri.file(filePath!).pathSegments.last}')
+        .putFile(File(filePath))
+        .then((p0) {
+      p0.ref.getDownloadURL().then((value) {
+        FirebaseFirestore.instance.collection('posts').doc(postId).update({
+          'voice': value,
+        });
+
+        emit(SocialUploadVoiceRecordSuccessStates());
+      }).catchError((error) {
+        emit(SocialUploadVoiceRecordErrorStates(error));
+      });
+    });
+  }
+
+  Future voiceResumeRecord() async {
     await audioRecorder.resume();
     emit(SocialVoiceRecordOn());
   }
-  void voiceRecorder() {
-    emit(SocialVoiceRecorderLoadingStates());
+
+  void voiceRecorderWithBottomSheet() {
+    emit(SocialVoiceRecorderWithBottomSheetWithBottomSheetLoadingStates());
+  }
+
+  void checkRecording({String? postId}) 
+  {
+    if(isRecord ==true)
+    {
+      voiceStopRecord(postId: postId);
+      isRecord =!isRecord;
+      emit(SocialCheckRecordingStates());
+    } else if(isRecord == false)
+    {
+      voiceStartRecord(postId: postId);
+      isRecord =!isRecord;
+      showToast(message: 'Recording');
+      emit(SocialCheckRecordingStates());
+    }
   }
 }

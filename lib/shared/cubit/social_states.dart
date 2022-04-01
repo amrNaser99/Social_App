@@ -182,9 +182,18 @@ class SocialOpenCommentSheetStates extends SocialStates {}
 class SocialVoiceRecordOn extends SocialStates {}
 class SocialVoiceRecordOff extends SocialStates {}
 
-class SocialVoiceRecorderLoadingStates extends SocialStates {}
-class SocialVoiceRecorderSuccessStates extends SocialStates {}
-class SocialVoiceRecorderErrorStates extends SocialStates {
+class SocialVoiceRecorderWithBottomSheetWithBottomSheetLoadingStates extends SocialStates {}
+class SocialVoiceRecorderWithBottomSheetSuccessStates extends SocialStates {}
+class SocialVoiceRecorderWithBottomSheetErrorStates extends SocialStates {
   final String error;
-  SocialVoiceRecorderErrorStates(this.error);
+  SocialVoiceRecorderWithBottomSheetErrorStates(this.error);
+}
+class SocialCheckRecordingStates extends SocialStates {}
+
+class SocialUploadVoiceRecordLoadingStates extends SocialStates {}
+class SocialUploadVoiceRecordSuccessStates extends SocialStates {}
+class SocialUploadVoiceRecordErrorStates extends SocialStates {
+  final String error;
+
+  SocialUploadVoiceRecordErrorStates(this.error);
 }

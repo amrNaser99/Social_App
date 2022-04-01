@@ -12,7 +12,8 @@ class PostModel {
   late int? likes;
   late int? nComments;
   var controller = TextEditingController();
-  FileSystemEntity? voice;
+  var voice;
+  // FileSystemEntity? voice;
 
 
 
@@ -26,6 +27,7 @@ class PostModel {
     this.postId,
     this.likes,
     this.nComments,
+    this.voice,
   });
 
   PostModel.fromJson(Map<String, dynamic> json) {

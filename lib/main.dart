@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/layout/splash/splash_screen.dart';
@@ -12,6 +13,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await CacheHelper.init();
+
+  //when the app is opened
+  FirebaseMessaging.onMessage.listen((event) {});
+  // when click on notification to open app
+  FirebaseMessaging.onMessageOpenedApp.listen((event) {});
+  // background notification
+  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   // var r = await FirebaseMessaging.instance.getToken();
   // print('=================token=============================');
