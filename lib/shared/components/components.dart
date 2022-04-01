@@ -694,7 +694,7 @@ Widget buildPostItem(
                             ),
                             onFieldSubmitted: (String value) {
                               cubit.commentPost(
-                                  postId: model.postId!, commentText: value);
+                                  postId: model.postId!, textComment: value);
                               print('Comment Done');
                               commentController.clear();
                             },

@@ -6,6 +6,8 @@ void printFullText(String text)
 
 String? uId ='';
 int? token ;
+bool? permissionsGranted ;
+
 class Paths {
   static String recording = '/storage/emulated/0/Twasol/recordings';
 }

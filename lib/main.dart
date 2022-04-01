@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/layout/splash/splash_screen.dart';
 import 'package:twasol/shared/bloc_observer.dart';
 import 'package:twasol/shared/components/constants.dart';
+import 'package:twasol/shared/components/permissions.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import 'package:twasol/shared/network/local/cache_helper.dart';
 import 'shared/styles/themes.dart';
@@ -14,6 +15,9 @@ void main() async {
   await Firebase.initializeApp();
   await CacheHelper.init();
 
+  if(permissionsGranted == null || permissionsGranted == false){
+  await PermissionHandler.appPermission();
+  }
   //when the app is opened
   FirebaseMessaging.onMessage.listen((event) {});
   // when click on notification to open app
@@ -21,12 +25,15 @@ void main() async {
   // background notification
   // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
+
   // var r = await FirebaseMessaging.instance.getToken();
   // print('=================token=============================');
   // print(r);
 
   // bool onBoarding = false;
   uId = CacheHelper.getData(key: 'uId');
+  permissionsGranted = CacheHelper.getData(key: 'permissionsGranted');
+
 
   BlocOverrides.runZoned(
     () {

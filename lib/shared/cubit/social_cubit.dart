@@ -384,10 +384,14 @@ class SocialCubit extends Cubit<SocialStates> {
     return isLikedByMe;
   }
 
-  void commentPost({required String postId, required String commentText}) {
+  void commentPost({
+    required String postId,
+    String? textComment,
+    var voiceComment,
+  }) {
     CommentModel commentModel = CommentModel(
       userName: userModel!.userName,
-      comment: commentText,
+      comment: textComment,
       uId: userModel!.uId,
       profileImage: userModel!.image,
       postId: postId,
@@ -407,15 +411,14 @@ class SocialCubit extends Cubit<SocialStates> {
       print('${userModel!.uId} Comment Successfully');
 
       emit(SocialCommentsPostsSuccessStates());
-      emit(SocialOpenCommentSheetStates());
     }).catchError((error) {
-      emit(SocialCommentsPostsSuccessStates());
+      emit(SocialCommentsPostsErrorStates(error));
     });
   }
 
   List<CommentModel> peopleComments = [];
 
-  void getComments({String? postId}) {
+  Future<void> getComments({String? postId}) async {
     emit(SocialGetCommentsLoadingStates());
 
     FirebaseFirestore.instance
@@ -429,9 +432,8 @@ class SocialCubit extends Cubit<SocialStates> {
         peopleComments.add(CommentModel.fromJson(element.data()));
       });
       print('number of people Comments ${peopleComments.length}');
-      emit(SocialGetCommentsSuccessStates());
-      emit(SocialOpenCommentSheetStates());
     });
+    emit(SocialGetCommentsSuccessStates());
   }
 
   List<UserModel> users = [];
@@ -664,18 +666,7 @@ class SocialCubit extends Cubit<SocialStates> {
   Future voiceStartRecord({
     String? postId,
   }) async {
-    Map<Permission, PermissionStatus> permissions = await [
-      Permission.storage,
-      Permission.microphone,
-      Permission.manageExternalStorage,
-    ].request();
-
-    bool permissionsGranted = permissions[Permission.storage]!.isGranted &&
-        permissions[Permission.microphone]!.isGranted &&
-        permissions[Permission.manageExternalStorage]!.isGranted;
-
-    if (permissionsGranted) {
-      print('in permissionsGranted');
+    if (permissionsGranted == true) {
       Directory appFolder = Directory(Paths.recording);
 
       bool appFolderExists = await appFolder.exists();
@@ -725,6 +716,7 @@ class SocialCubit extends Cubit<SocialStates> {
   void uploadVoiceRecord({
     String? filePath,
     String? postId,
+    String? textComment,
   }) async {
     await firebase_storage.FirebaseStorage.instance
         .ref()
@@ -732,9 +724,16 @@ class SocialCubit extends Cubit<SocialStates> {
         .putFile(File(filePath))
         .then((p0) {
       p0.ref.getDownloadURL().then((value) {
-        FirebaseFirestore.instance.collection('posts').doc(postId).update({
-          'voice': value,
-        });
+        // FirebaseFirestore.instance
+        //     .collection('posts')
+        //     .doc(postId)
+        //     .collection('comments')
+        //     .doc(userModel!.uId)
+        //     .update({
+        //   'voice': value,
+        // });
+        commentPost(
+            postId: postId!, voiceComment: value);
 
         emit(SocialUploadVoiceRecordSuccessStates());
       }).catchError((error) {
@@ -752,17 +751,14 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialVoiceRecorderWithBottomSheetWithBottomSheetLoadingStates());
   }
 
-  void checkRecording({String? postId}) 
-  {
-    if(isRecord ==true)
-    {
+  void checkRecording({String? postId}) {
+    if (isRecord == true) {
       voiceStopRecord(postId: postId);
-      isRecord =!isRecord;
+      isRecord = !isRecord;
       emit(SocialCheckRecordingStates());
-    } else if(isRecord == false)
-    {
+    } else if (isRecord == false) {
       voiceStartRecord(postId: postId);
-      isRecord =!isRecord;
+      isRecord = !isRecord;
       showToast(message: 'Recording');
       emit(SocialCheckRecordingStates());
     }

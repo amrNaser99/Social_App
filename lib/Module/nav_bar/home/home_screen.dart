@@ -116,7 +116,7 @@ class HomeScreen extends StatelessWidget {
                       );
                     });
               }
-              if (state is SocialOpenCommentSheetStates) {
+              if (state is SocialGetCommentsSuccessStates) {
                 showModalBottomSheet(
                     context: context,
                     clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -246,6 +246,7 @@ class HomeScreen extends StatelessWidget {
                       );
                     });
               }
+
 
               if (state is SocialDeletePostSuccessStates) {
                 showToast(message: 'Post Deleted Successfully');
