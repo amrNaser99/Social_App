@@ -7,7 +7,6 @@ import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/components/constants.dart';
 import 'package:twasol/shared/network/local/cache_helper.dart';
 import 'package:twasol/shared/styles/colors.dart';
-import 'package:twasol/shared/styles/icon_broken.dart';
 import 'login_cubit/social_login_cubit.dart';
 import 'login_cubit/social_login_states.dart';
 
@@ -31,7 +30,7 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
       child: BlocConsumer<SocialLoginCubit, SocialLoginStates>(
           listener: (BuildContext context, state) {
         if (state is SocialLoginErrorStates) {
-          showToast(message: state.error);
+          showToast(message: state.error,isShort: false);
         }
         if (state is SocialLoginSuccessStates) {
           CacheHelper.saveData(key: 'token', value: token).then((value) {
@@ -54,8 +53,7 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
             },
           );
         }
-        if (state is SocialSignInWithGoogleSuccessStates)
-        {
+        if (state is SocialSignInWithGoogleSuccessStates) {
           NavigateAndFinish(context, SocialLayout());
           // CacheHelper.saveData(key: 'token', value: token).then((value) {
           //   print('token Saved Successfully');
@@ -77,7 +75,6 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
           //   },
           // );
         }
-
       }, builder: (BuildContext context, state) {
         return Scaffold(
             appBar: AppBar(),
@@ -183,29 +180,30 @@ class _SocialLoginScreenState extends State<SocialLoginScreen> {
                                 ),
                               ],
                             ),
-
-                             Container(
+                            Container(
                               color: Colors.grey[300],
                               width: 150,
-                               height: 2,
+                              height: 2,
                             ),
                             const SizedBox(
                               height: 15.0,
                             ),
-                            const Text('Sign In By..',),
+                            const Text(
+                              'Sign In By..',
+                            ),
                             const SizedBox(
                               height: 10.0,
                             ),
                             IconButton(
-                              onPressed: ()
-                              {
+                              onPressed: () {
                                 //TODO SignBy Google
-                                SocialLoginCubit.get(context).signInWithGoogle();
+                                SocialLoginCubit.get(context)
+                                    .signInWithGoogle();
                               },
                               icon: CircleAvatar(
-                                backgroundImage: AssetImage('assets/images/google_logo.png'),
+                                backgroundImage:
+                                    AssetImage('assets/images/google_logo.png'),
                               ),
-
                             ),
                           ],
                         ),

@@ -1,10 +1,11 @@
+import 'dart:async';
 import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:record/record.dart';
 import 'package:twasol/Module/nav_bar/chats/chats_screen.dart';
 import 'package:twasol/Module/nav_bar/post/post_screen.dart';
@@ -19,10 +20,8 @@ import '../../Module/nav_bar/profile/profile_screen.dart';
 import '../components/constants.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-
-import '../../Module/nav_bar/home/home_screen.dart';
 import '../styles/icon_broken.dart';
-
+import '../../Module/nav_bar/home/home_screen.dart';
 class SocialCubit extends Cubit<SocialStates> {
   SocialCubit() : super(SocialInitialState());
 
@@ -288,25 +287,28 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   void likePost({
-    String? postId,
+    PostModel? postModel,
   }) async {
     emit(SocialLikePostsLoadingStates());
     LikesModel likesModel = LikesModel(
       userName: userModel!.userName,
       uId: userModel!.uId,
       profileImage: userModel!.image,
-      postId: postId,
+      postId: postModel!.postId,
       dateTime: DateTime.now().toString(),
     );
 
     await FirebaseFirestore.instance
         .collection('posts')
-        .doc(postId)
+        .doc(postModel.postId)
         .collection('likes')
         .doc(userModel!.uId)
         .set(likesModel.toMap())
         .then((value) {
       getPosts();
+      if (postModel.uId != userModel!.uId) {
+        disLikePost(postId: postModel.postId);
+      }
       print('${userModel!.uId} Liked Succesfully');
       emit(SocialLikePostsSuccessStates());
     }).catchError((error) {
@@ -330,14 +332,9 @@ class SocialCubit extends Cubit<SocialStates> {
       event.docs.forEach((element) {
         peopleReacted.add(LikesModel.fromJson(element.data()));
       });
-      if (peopleReacted.contains(userModel!.uId)) {
-        // disLikePost();
-      }
-      print('peaole reacted ${peopleReacted.length}');
-
-      emit(SocialGetLikesCountSuccessStates());
-      emit(SocialOpenLikeSheetStates());
     });
+    print('peaole reacted ${peopleReacted.length}');
+    emit(SocialGetLikesCountSuccessStates());
   }
 
   void disLikePost({
@@ -358,45 +355,70 @@ class SocialCubit extends Cubit<SocialStates> {
     });
   }
 
-  Future<bool> likedByMe({
-    String? postId,
-  }) async {
-    emit(SocialLikedByMeCheckedLoadingState());
-    bool isLikedByMe = false;
-    await FirebaseFirestore.instance
-        .collection('posts')
-        .doc(postId)
-        .get()
-        .then((event) async {
-      var likes = await event.reference.collection('likes').get();
-      likes.docs.forEach((element) {
-        if (element.id == userModel!.uId) {
-          isLikedByMe = true;
-          disLikePost(postId: postId);
-        }
-      });
-      if (isLikedByMe == false) {
-        likePost(postId: postId);
-      }
-      print(isLikedByMe);
-      emit(SocialLikedByMeCheckedSuccessState());
-    });
-    return isLikedByMe;
-  }
+  //
+  // Future<bool> likedByMe({
+  //   String? postId,
+  // }) async {
+  //   emit(SocialLikedByMeCheckedLoadingState());
+  //   bool isLikedByMe = false;
+  //   await FirebaseFirestore.instance
+  //       .collection('posts')
+  //       .doc(postId)
+  //       .get()
+  //       .then((event) async {
+  //     var likes = await event.reference.collection('likes').get();
+  //     likes.docs.forEach((element) {
+  //       if (element.id == userModel!.uId) {
+  //         isLikedByMe = true;
+  //         disLikePost(postId: postId);
+  //       }
+  //     });
+  //     if (isLikedByMe == false) {
+  //       likePost(postId: postId);
+  //     }
+  //     print(isLikedByMe);
+  //     emit(SocialLikedByMeCheckedSuccessState());
+  //   });
+  //   return isLikedByMe;
+  // }
 
   void commentPost({
     required String postId,
     String? textComment,
     var voiceComment,
   }) {
-    CommentModel commentModel = CommentModel(
-      userName: userModel!.userName,
-      comment: textComment,
-      uId: userModel!.uId,
-      profileImage: userModel!.image,
-      postId: postId,
-      dateTime: DateTime.now().toString(),
-    );
+    CommentModel? commentModel;
+    if (textComment != null && voiceComment == null) {
+      commentModel = CommentModel(
+        userName: userModel!.userName,
+        comment: textComment,
+        uId: userModel!.uId,
+        profileImage: userModel!.image,
+        postId: postId,
+        dateTime: DateTime.now().toString(),
+      );
+    } else if (textComment == null && voiceComment != null) {
+      commentModel = CommentModel(
+        userName: userModel!.userName,
+        uId: userModel!.uId,
+        profileImage: userModel!.image,
+        postId: postId,
+        dateTime: DateTime.now().toString(),
+        voice: voiceComment,
+      );
+    } else if (textComment != null && voiceComment != null) {
+      commentModel = CommentModel(
+        userName: userModel!.userName,
+        comment: textComment,
+        uId: userModel!.uId,
+        profileImage: userModel!.image,
+        postId: postId,
+        dateTime: DateTime.now().toString(),
+        voice: voiceComment,
+      );
+    } else {
+      showToast(message: 'Comment Error !');
+    }
 
     FirebaseFirestore.instance
         .collection('posts')
@@ -404,7 +426,7 @@ class SocialCubit extends Cubit<SocialStates> {
         .collection('comments')
         .doc(userModel!.uId)
         .set(
-          commentModel.toMap(),
+          commentModel!.toMap(),
         )
         .then((value) {
       getPosts();
@@ -662,6 +684,8 @@ class SocialCubit extends Cubit<SocialStates> {
 
   bool isRecord = false;
   Record audioRecorder = Record();
+  String? voicePath;
+  File? soundFile;
 
   Future voiceStartRecord({
     String? postId,
@@ -674,32 +698,31 @@ class SocialCubit extends Cubit<SocialStates> {
         final created = await appFolder.create(recursive: true);
         print(created.path);
       }
-      final String filepath;
 
       if (postId != null) {
-        filepath = Paths.recording +
+        voicePath = Paths.recording +
             '/' +
             postId.toString() +
             '_' +
             DateTime.now().millisecondsSinceEpoch.toString() +
             '.wav';
-        print(filepath);
+        print(voicePath);
       } else {
         postId = 'postVoice';
-        filepath = Paths.recording +
+        voicePath = Paths.recording +
             '/' +
             postId.toString() +
             '_' +
             DateTime.now().millisecondsSinceEpoch.toString() +
             '.wav';
 
-        print(filepath);
+        print(voicePath);
       }
 
       isRecord = true;
 
       await audioRecorder.start(
-        path: filepath,
+        path: voicePath,
       );
       emit(SocialVoiceRecordOn());
     }
@@ -710,7 +733,10 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialVoiceRecordOff());
     print('Output path $path');
 
-    uploadVoiceRecord(filePath: path, postId: postId);
+    uploadVoiceRecord(
+      filePath: path,
+      postId: postId,
+    );
   }
 
   void uploadVoiceRecord({
@@ -718,22 +744,16 @@ class SocialCubit extends Cubit<SocialStates> {
     String? postId,
     String? textComment,
   }) async {
+    emit(SocialUploadVoiceRecordLoadingStates());
     await firebase_storage.FirebaseStorage.instance
         .ref()
         .child('voiceRecord/${Uri.file(filePath!).pathSegments.last}')
         .putFile(File(filePath))
         .then((p0) {
       p0.ref.getDownloadURL().then((value) {
-        // FirebaseFirestore.instance
-        //     .collection('posts')
-        //     .doc(postId)
-        //     .collection('comments')
-        //     .doc(userModel!.uId)
-        //     .update({
-        //   'voice': value,
-        // });
-        commentPost(
-            postId: postId!, voiceComment: value);
+
+        voicePath = value;
+        commentPost(postId: postId!, voiceComment: value);
 
         emit(SocialUploadVoiceRecordSuccessStates());
       }).catchError((error) {
@@ -743,6 +763,7 @@ class SocialCubit extends Cubit<SocialStates> {
   }
 
   Future voiceResumeRecord() async {
+    emit(SocialAudioVoiceLoadingStates());
     await audioRecorder.resume();
     emit(SocialVoiceRecordOn());
   }
@@ -762,5 +783,76 @@ class SocialCubit extends Cubit<SocialStates> {
       showToast(message: 'Recording');
       emit(SocialCheckRecordingStates());
     }
+  }
+
+  AudioPlayer audioPlayer = AudioPlayer();
+
+  void audioPlay(String url) async {
+    emit(SocialAudioVoiceLoadingStates());
+    await audioPlayer.play(url);
+    emit(SocialAudioPlayStates());
+  }
+
+  void audioPause() async {
+    emit(SocialAudioVoiceLoadingStates());
+
+    await audioPlayer.pause();
+
+    emit(SocialAudioPauseStates());
+  }
+
+  void audioResume() async {
+    emit(SocialAudioVoiceLoadingStates());
+
+    await audioPlayer.resume();
+
+    emit(SocialAudioResumeStates());
+  }
+
+  void audioStop() async {
+    emit(SocialAudioVoiceLoadingStates());
+
+    await audioPlayer.stop();
+
+    emit(SocialAudioStopStates());
+  }
+
+  voiceChange() {
+    return audioPlayer.onAudioPositionChanged.listen((event) {
+      print('onAudioPositionChanged Duration: $event');
+      emit(SocialOnAudioPositionChangedStates());
+    });
+  }
+
+  Future<int> getCurrentPositionVoice() {
+    return audioPlayer.getCurrentPosition();
+  }
+
+  AudioCache audioCache = AudioCache();
+
+  void audioCachePlay(String fileName) async {
+    await audioCache.play(fileName);
+
+    emit(SocialAudioPlayStates());
+  }
+
+  Future<void> loadInAudioCache({String? postId}) async {
+    await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(postId)
+        .collection('comments')
+        .doc(userModel!.uId)
+        .get()
+        .then((value) {
+          print('77777777777777777777777777777777');
+          // print(value.data());
+          CommentModel commentModel = CommentModel.fromJson(value.data()!);
+          // voicePath = commentModel.voice.toString().split('?')[0];
+          // audioCache.load(voicePath!);
+    });
+  }
+
+  void clearCacheVoice(String fileName) async {
+    await audioCache.clearAll();
   }
 }

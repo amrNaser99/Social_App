@@ -5,6 +5,14 @@ import 'package:twasol/shared/styles/icon_broken.dart';
 import '../../../shared/cubit/social_cubit.dart';
 import '../../../shared/cubit/social_states.dart';
 import '../../../shared/components/components.dart';
+import 'package:social_media_recorder/audio_encoder_type.dart';
+import 'package:social_media_recorder/main.dart';
+import 'package:social_media_recorder/provider/sound_record_notifier.dart';
+import 'package:social_media_recorder/screen/social_media_recorder.dart';
+import 'package:social_media_recorder/widgets/lock_record.dart';
+import 'package:social_media_recorder/widgets/show_counter.dart';
+import 'package:social_media_recorder/widgets/show_mic_with_text.dart';
+import 'package:social_media_recorder/widgets/sound_recorder_when_locked_design.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -29,7 +37,7 @@ class HomeScreen extends StatelessWidget {
 
           return BlocConsumer<SocialCubit, SocialStates>(
             listener: (BuildContext context, state) {
-              if (state is SocialOpenLikeSheetStates) {
+              if (state is SocialGetLikesCountSuccessStates) {
                 showModalBottomSheet(
                     context: context,
                     clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -172,10 +180,12 @@ class HomeScreen extends StatelessWidget {
                                 physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) =>
                                     buildCommentListSheet(
-                                        context: context,
-                                        model: SocialCubit.get(context)
-                                            .peopleComments[index],
-                                        index: index),
+                                  context: context,
+                                  model: SocialCubit.get(context)
+                                      .peopleComments[index],
+                                  state: state,
+                                  path:  cubit.voicePath ,
+                                ),
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(
                                   height: 1,
@@ -225,19 +235,19 @@ class HomeScreen extends StatelessWidget {
                             ),
                             Expanded(
                               child: GestureDetector(
-                                onLongPressStart: (lpd)
-                                {
+                                onLongPressStart: (lpd) {
                                   SocialCubit.get(context).voiceStartRecord();
                                 },
-                                onLongPressEnd: (lpd)
-                                {
+                                onLongPressEnd: (lpd) {
                                   //TODO in voiceStopRecord
                                   SocialCubit.get(context).voiceStopRecord();
                                 },
                                 child: IconButton(
                                   iconSize: 20,
-                                   icon: const Icon(IconBroken.Voice_2)
-                                  , onPressed: () { print('asdakjhjjkokji93'); },
+                                  icon: const Icon(IconBroken.Voice_2),
+                                  onPressed: () {
+                                    print('asdakjhjjkokji93');
+                                  },
                                 ),
                               ),
                             ),
@@ -246,7 +256,6 @@ class HomeScreen extends StatelessWidget {
                       );
                     });
               }
-
 
               if (state is SocialDeletePostSuccessStates) {
                 showToast(message: 'Post Deleted Successfully');

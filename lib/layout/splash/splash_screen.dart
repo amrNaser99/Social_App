@@ -5,7 +5,22 @@ import '../../Module/onBoarding/onBoarding.dart';
 import '../../shared/components/constants.dart';
 import '../social_layout.dart';
 
-class splashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  State<SplashScreen> createState() => SplashScreenState();
+}
+
+class SplashScreenState extends State<SplashScreen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
 

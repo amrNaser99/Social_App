@@ -197,3 +197,11 @@ class SocialUploadVoiceRecordErrorStates extends SocialStates {
 
   SocialUploadVoiceRecordErrorStates(this.error);
 }
+
+class SocialAudioVoiceLoadingStates extends SocialStates {}
+
+class SocialAudioPlayStates extends SocialStates {}
+class SocialAudioPauseStates extends SocialStates {}
+class SocialAudioResumeStates extends SocialStates {}
+class SocialAudioStopStates extends SocialStates {}
+class SocialOnAudioPositionChangedStates extends SocialStates {}

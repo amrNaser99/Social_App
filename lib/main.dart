@@ -1,3 +1,4 @@
+import 'package:audioplayers/notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -5,19 +6,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/layout/splash/splash_screen.dart';
 import 'package:twasol/shared/bloc_observer.dart';
 import 'package:twasol/shared/components/constants.dart';
+import 'package:twasol/shared/components/notifications_service.dart';
 import 'package:twasol/shared/components/permissions.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import 'package:twasol/shared/network/local/cache_helper.dart';
 import 'shared/styles/themes.dart';
 
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await CacheHelper.init();
-
+  NotificationServices().initNotification();
   if(permissionsGranted == null || permissionsGranted == false){
-  await PermissionHandler.appPermission();
+    await PermissionHandler.appPermission();
   }
+
   //when the app is opened
   FirebaseMessaging.onMessage.listen((event) {});
   // when click on notification to open app
@@ -26,9 +30,9 @@ void main() async {
   // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
 
-  // var r = await FirebaseMessaging.instance.getToken();
-  // print('=================token=============================');
-  // print(r);
+  var firebaseMessagingToken = await FirebaseMessaging.instance.getToken();
+  print('=================token=============================');
+  print('firebaseMessagingToken $firebaseMessagingToken');
 
   // bool onBoarding = false;
   uId = CacheHelper.getData(key: 'uId');
@@ -37,7 +41,7 @@ void main() async {
 
   BlocOverrides.runZoned(
     () {
-      runApp(splashScreen());
+      runApp(SplashScreen());
     },
     blocObserver: MyBlocObserver(),
   );
@@ -71,18 +75,3 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-// const AndroidInitializationSettings androidInitialization =
-// AndroidInitializationSettings('launcher_icon');
-// const IOSInitializationSettings iosInitialization =
-// IOSInitializationSettings();
-// const InitializationSettings initializationSettings =
-// InitializationSettings(
-//   android: androidInitialization,
-//   iOS: iosInitialization,
-// );
-// FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-// flutterLocalNotificationsPlugin.initialize(
-// initializationSettings,
-// // onSelectNotification: onSelectNotification,
-// );

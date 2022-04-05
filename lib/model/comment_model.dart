@@ -6,6 +6,7 @@ class CommentModel {
   String? postId;
   String? dateTime;
   var voice;
+  // FileSystemEntity? voice;
 
   CommentModel({
     this.userName,

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 
 class PostModel {
@@ -12,10 +11,6 @@ class PostModel {
   late int? likes;
   late int? nComments;
   var controller = TextEditingController();
-  var voice;
-  // FileSystemEntity? voice;
-
-
 
   PostModel({
     this.userName,
@@ -27,7 +22,6 @@ class PostModel {
     this.postId,
     this.likes,
     this.nComments,
-    this.voice,
   });
 
   PostModel.fromJson(Map<String, dynamic> json) {
@@ -40,7 +34,6 @@ class PostModel {
     postId = json['postId'];
     likes = json['likes'];
     nComments = json['nComments'];
-    voice = json['voice'];
   }
 
   Map<String, dynamic> toMap() {
@@ -52,7 +45,6 @@ class PostModel {
       'text': text,
       'postImage': postImage,
       'nComments': nComments,
-      'voice': voice,
     };
   }
 }
