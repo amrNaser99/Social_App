@@ -21,7 +21,6 @@ void main() async {
   if(permissionsGranted == null || permissionsGranted == false){
     await PermissionHandler.appPermission();
   }
-
   //when the app is opened
   FirebaseMessaging.onMessage.listen((event) {});
   // when click on notification to open app

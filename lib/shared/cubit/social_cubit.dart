@@ -793,7 +793,7 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialAudioPlayStates());
   }
 
-  void audioPause() async {
+  void audioPause(String url) async {
     emit(SocialAudioVoiceLoadingStates());
 
     await audioPlayer.pause();
@@ -817,11 +817,15 @@ class SocialCubit extends Cubit<SocialStates> {
     emit(SocialAudioStopStates());
   }
 
-  voiceChange() {
-    return audioPlayer.onAudioPositionChanged.listen((event) {
+  Duration voiceChange() {
+    Duration? ev ;
+    audioPlayer.onAudioPositionChanged.listen((event) {
+      ev = event;
       print('onAudioPositionChanged Duration: $event');
       emit(SocialOnAudioPositionChangedStates());
     });
+    return ev!;
+
   }
 
   Future<int> getCurrentPositionVoice() {

@@ -15,9 +15,9 @@ class NotificationServices {
 
   NotificationServices._internal();
 
- Future<void> initNotification() async {
+  Future<void> initNotification() async {
     const AndroidInitializationSettings androidInitialization =
-        AndroidInitializationSettings('app/src/main/res/drawable/logo.png');
+        AndroidInitializationSettings('logo');
     const IOSInitializationSettings iosInitialization =
         IOSInitializationSettings(
       requestAlertPermission: false,
@@ -40,6 +40,7 @@ class NotificationServices {
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
     );
+    print('Notification init Successfully');
   }
 
   Future<void> showNotification(

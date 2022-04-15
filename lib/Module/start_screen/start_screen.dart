@@ -1,55 +1,84 @@
-// import 'package:flutter/material.dart';
-//
-// class StartScreen extends StatelessWidget {
-//   const StartScreen({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(),
-//       backgroundColor: Colors.white,
-//       body: Center(
-//         child: Column(
-//           // mainAxisSize: MainAxisSize.min,
-//           // crossAxisAlignment: CrossAxisAlignment.center,
-//           children: [
-//             Image.asset(
-//               'assets/images/logo.png',
-//             ),
-//             SizedBox(
-//               height: 10,
-//             ),
-//             Text(
-//               'Twasol',
-//               style: Theme.of(context)
-//                   .textTheme
-//                   .headline4
-//                   ?.copyWith(color: Colors.black, fontWeight: FontWeight.w600),
-//             ),
-//             SizedBox(
-//               height: 20,
-//             ),
-//             // defaultButton(text: 'LOGIN', function: () {},
-//             ),
-//             // Container(
-//             //   decoration: BoxDecoration(
-//             //     borderRadius: BorderRadius.circular(10.0),
-//             //   ),
-//             //   child: MaterialButton(
-//             //     onPressed: () {},
-//             //     child: Text(
-//             //       'LOGIN',
-//             //       style: Theme.of(context).textTheme.bodyText2,
-//             //     ),
-//             //   ),
-//             // ),
-//             SizedBox(
-//               height: 5,
-//             ),
-//             // defaultButton(text: 'SIGN UP', function: () {},),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:twasol/Module/login/social_login_screen.dart';
+import 'package:twasol/Module/register/register_screen.dart';
+import 'package:twasol/shared/components/components.dart';
+
+class StartScreen extends StatefulWidget {
+  const StartScreen({Key? key}) : super(key: key);
+
+  @override
+  State<StartScreen> createState() => _StartScreenState();
+}
+
+class _StartScreenState extends State<StartScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Scaffold(
+        appBar: AppBar(),
+        backgroundColor: Colors.white,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Center(
+                child: Image(
+              image: AssetImage(
+                'assets/images/logo.png',
+              ),
+            )),
+
+            Text(
+              'Twasol',
+              style: Theme.of(context)
+                  .textTheme
+                  .headline4
+                  ?.copyWith(color: Colors.black, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                children: [
+                  defaultButton(
+                    text: 'login',
+                    isUpperCase: true,
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
+                    function: () {
+                      NavigateTo(context, const SocialLoginScreen());
+                    },
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+
+                  const Text(
+                    '- Or -',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(
+                    height: 3,
+                  ),
+                  defaultButton(
+                    text: 'SIGN UP',
+                    function: () {
+                      NavigateTo(context, const SocialRegisterScreen());
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -17,6 +17,7 @@ class OnBoardingScreen extends StatefulWidget {
 }
 
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
+
   List<BoardingModel> boardingList = [
     BoardingModel(
       image: 'assets/images/onb1.png',
@@ -44,7 +45,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       if (value) {
         NavigateAndFinish(
           context,
-          const SocialLoginScreen(),
+          const StartScreen(),
+          // const SocialLoginScreen(),
         );
       }
     });

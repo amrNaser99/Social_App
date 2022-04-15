@@ -5,14 +5,6 @@ import 'package:twasol/shared/styles/icon_broken.dart';
 import '../../../shared/cubit/social_cubit.dart';
 import '../../../shared/cubit/social_states.dart';
 import '../../../shared/components/components.dart';
-import 'package:social_media_recorder/audio_encoder_type.dart';
-import 'package:social_media_recorder/main.dart';
-import 'package:social_media_recorder/provider/sound_record_notifier.dart';
-import 'package:social_media_recorder/screen/social_media_recorder.dart';
-import 'package:social_media_recorder/widgets/lock_record.dart';
-import 'package:social_media_recorder/widgets/show_counter.dart';
-import 'package:social_media_recorder/widgets/show_mic_with_text.dart';
-import 'package:social_media_recorder/widgets/sound_recorder_when_locked_design.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
