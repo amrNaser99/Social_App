@@ -1,17 +1,20 @@
 import 'dart:io';
 
 class MessageModel {
-  late String? senderId;
-  late String? receiverId;
-  late String? dataTime;
-  late String? text;
-  late FileSystemEntity? voice;
+  String? senderId;
+  String? receiverId;
+  String? dataTime;
+  String? text;
+  String? pic;
+  FileSystemEntity? voice;
 
   MessageModel({
     this.senderId,
     this.receiverId,
     this.dataTime,
     this.text,
+    this.pic,
+    this.voice,
   });
 
   MessageModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +23,7 @@ class MessageModel {
     dataTime = json['dataTime'];
     text = json['text'];
     voice = json['voice'];
+    pic = json['pic'];
   }
 
   Map<String, dynamic> toMap() {

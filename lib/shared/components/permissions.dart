@@ -8,12 +8,13 @@ class PermissionHandler {
     Map<Permission, PermissionStatus> permissions = await [
       Permission.storage,
       Permission.microphone,
-      Permission.manageExternalStorage,
+      // Permission.manageExternalStorage,
     ].request();
 
     permissionsGranted = permissions[Permission.storage]!.isGranted &&
-        permissions[Permission.microphone]!.isGranted &&
-        permissions[Permission.manageExternalStorage]!.isGranted;
+            permissions[Permission.microphone]!.isGranted
+        // && permissions[Permission.manageExternalStorage]!.isGranted
+        ;
 
     if (permissionsGranted == true) {
       CacheHelper.saveData(key: 'permissionsGranted', value: permissionsGranted)

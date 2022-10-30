@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:twasol/Module/login/login_cubit/social_login_states.dart';
+import 'package:twasol/Module/auth/login/cubit/social_login_states.dart';
 import 'package:twasol/shared/components/constants.dart';
 import 'package:twasol/shared/network/local/cache_helper.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,7 +18,7 @@ class SocialLoginCubit extends Cubit<SocialLoginStates> {
     required String password,
   }) {
     emit(SocialLoginLoadingStates());
-    print('in userLogin');
+    debugPrint('in userLogin');
 
     auth
         .signInWithEmailAndPassword(
@@ -25,11 +26,20 @@ class SocialLoginCubit extends Cubit<SocialLoginStates> {
       password: password,
     )
         .then((value) {
-      print('==========================');
-      CacheHelper.saveData(key: 'email', value: value.user!.email);
-      CacheHelper.saveData(key: 'uId', value: value.user!.uid);
+      debugPrint('==========================');
+      CacheHelper.saveData(key: 'email', value: value.user!.email).then((value) {
+        debugPrint('email Cached Successfully');
+      }).catchError((error) {
+        debugPrint(error);
+      });
+      CacheHelper.saveData(key: 'uId', value: value.user!.uid).then((value) {
+        debugPrint('uId Cached Successfully');
+      }).catchError((error) {
+        debugPrint(error);
+      });
       uId = value.user!.uid;
-      print(value.user!.uid);
+      debugPrint(value.user!.uid);
+
       emit(SocialLoginSuccessStates(value.user!.uid));
     }).catchError((error) {
       emit(SocialLoginErrorStates(error.toString()));

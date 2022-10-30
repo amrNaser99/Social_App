@@ -16,7 +16,8 @@ class UserModel {
       this.image,
       this.imgCover,
       this.bio,
-      this.isEmailVerified });
+      this.isEmailVerified,
+  });
 
   UserModel.fromJson(Map<String,dynamic> json)
   {
@@ -28,6 +29,7 @@ class UserModel {
     imgCover = json['imgCover'];
     bio = json['bio'];
     isEmailVerified = json['isEmailVerified'];
+
   }
 
   Map<String,dynamic> toMap()

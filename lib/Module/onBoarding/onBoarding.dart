@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:twasol/Module/login/social_login_screen.dart';
-import 'package:twasol/Module/register/register_screen.dart';
 import 'package:twasol/model/boarding_model.dart';
 import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/network/local/cache_helper.dart';
 import 'package:twasol/shared/styles/colors.dart';
 
+import '../../shared/components/constants.dart';
+import '../../shared/components/permissions.dart';
 import '../start_screen/start_screen.dart';
 
 class OnBoardingScreen extends StatefulWidget {
@@ -40,9 +41,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
 
   bool isLast = false;
 
-  void submit() {
+  void submit() async {
+
+
+    if (permissionsGranted == null || permissionsGranted == false) {
+      await PermissionHandler.appPermission();
+    }
+
     CacheHelper.saveData(key: 'onBoarding', value: true).then((value) {
       if (value) {
+
         NavigateAndFinish(
           context,
           const StartScreen(),
@@ -50,6 +58,16 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         );
       }
     });
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+
   }
 
   @override
@@ -70,7 +88,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
         ],
       ),
       backgroundColor: Colors.indigo,
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(30.0),
         child: Column(
           children: [

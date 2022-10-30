@@ -1,19 +1,16 @@
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/model/massege_model.dart';
 import 'package:twasol/model/user_model.dart';
-import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
 import 'package:twasol/shared/styles/colors.dart';
 import 'package:twasol/shared/styles/icon_broken.dart';
 
 class ChatDetailsScreen extends StatelessWidget {
-  late UserModel userModel;
-
-  TextEditingController messageController = TextEditingController();
+  late final UserModel userModel;
+  final TextEditingController messageController = TextEditingController();
 
   ChatDetailsScreen({
     Key? key,
@@ -31,7 +28,10 @@ class ChatDetailsScreen extends StatelessWidget {
             return Scaffold(
               appBar: AppBar(
                 leading: IconButton(
-                  icon: const Icon(IconBroken.Arrow___Left_2,color: Colors.white,),
+                  icon: const Icon(
+                    IconBroken.Arrow___Left_2,
+                    color: Colors.white,
+                  ),
                   onPressed: () {
                     Navigator.pop(context);
                   },
@@ -55,14 +55,18 @@ class ChatDetailsScreen extends StatelessWidget {
                       ),
                       Text(
                         '${userModel.userName}',
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(color: Colors.white),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyText1!
+                            .copyWith(color: Colors.white),
                       ),
                     ],
                   ),
                 ),
               ),
               body: ConditionalBuilder(
-                condition: SocialCubit.get(context).messages.isNotEmpty || SocialCubit.get(context).messages.isEmpty,
+                condition: SocialCubit.get(context).messages.isNotEmpty ||
+                    SocialCubit.get(context).messages.isEmpty,
                 builder: (BuildContext context) {
                   return Padding(
                     padding: const EdgeInsets.all(20.0),
@@ -123,7 +127,7 @@ class ChatDetailsScreen extends StatelessWidget {
                                   child: TextFormField(
                                     controller: messageController,
                                     decoration: const InputDecoration(
-                                      hintText: 'Type Your Massege Here',
+                                      hintText: 'Type Your Message Here',
                                       border: InputBorder.none,
                                     ),
                                   ),

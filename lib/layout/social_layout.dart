@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/Module/nav_bar/post/post_screen.dart';
 import 'package:twasol/shared/components/components.dart';
+import 'package:twasol/shared/components/notifications.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import '../shared/cubit/social_states.dart';
+import '../shared/styles/colors.dart';
 import '../shared/styles/icon_broken.dart';
 
 class SocialLayout extends StatefulWidget {
-  static GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
-  int initialIndex = 0;
+  final GlobalKey scaffoldKey = GlobalKey<ScaffoldState>();
+  final int initialIndex = 0;
+
+  SocialLayout({super.key});
 
   @override
   State<SocialLayout> createState() => _SocialLayoutState();
@@ -28,6 +32,17 @@ class _SocialLayoutState extends State<SocialLayout>
   //   super.initState();
   // }
 
+  @override
+  void initState() {
+    super.initState();
+    // createNotification(
+    //   notificationTitle: 'test',
+    //   notificationBody: 'this is a test notification',
+    //   notificationPicture: 'assets/images/onb1.png',
+    // );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
       return BlocConsumer<SocialCubit, SocialStates>(
@@ -39,7 +54,7 @@ class _SocialLayoutState extends State<SocialLayout>
         builder: (BuildContext context, state) {
           SocialCubit cubit = BlocProvider.of(context);
           return Scaffold(
-            key: SocialLayout.scaffoldKey,
+            key: widget.scaffoldKey,
             appBar: AppBar(
               title: Text(
                 cubit.appBarTitles[cubit.currentIndex],
@@ -50,7 +65,6 @@ class _SocialLayoutState extends State<SocialLayout>
               //   tabs: SocialCubit.get(context).tabs,
               // ),
               actions: [
-
                 IconButton(
                   onPressed: () {},
                   icon: const Icon(
@@ -58,9 +72,9 @@ class _SocialLayoutState extends State<SocialLayout>
                   ),
                 ),
                 IconButton(
-                  onPressed: ()
-                  {
-                    SocialCubit.get(context).searchUsername(userName: 'mona_nasser');
+                  onPressed: () {
+                    SocialCubit.get(context)
+                        .searchUsername(userName: 'mona_nasser');
                   },
                   icon: const Icon(
                     IconBroken.Search,

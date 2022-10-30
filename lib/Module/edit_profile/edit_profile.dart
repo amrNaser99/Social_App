@@ -7,28 +7,25 @@ import 'package:twasol/shared/styles/colors.dart';
 import 'package:twasol/shared/styles/icon_broken.dart';
 
 class EditProfileScreen extends StatelessWidget {
-  var userNameController = TextEditingController();
-  var bioController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController bioController = TextEditingController();
+
+  EditProfileScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SocialCubit, SocialStates>(
       listener: (BuildContext context, state) {
-        if(state is SocialUpdateSuccessfullySuccessStates)
-        {
+        if (state is SocialUpdateSuccessfullySuccessStates) {
           showToast(message: 'Update Done Successfully');
         }
       },
       builder: (BuildContext context, Object? state) {
-        var userModel = SocialCubit
-            .get(context)
-            .userModel;
-        var profileImage = SocialCubit
-            .get(context)
-            .profileImage;
-        var coverImage = SocialCubit
-            .get(context)
-            .coverImage;
+        var userModel = SocialCubit.get(context).userModel;
+        var profileImage = SocialCubit.get(context).profileImage;
+        var coverImage = SocialCubit.get(context).coverImage;
         userNameController.text = userModel!.userName!;
         bioController.text = userModel.bio!;
 
@@ -57,7 +54,7 @@ class EditProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Container(
+                  SizedBox(
                     height: 200,
                     child: Stack(
                       alignment: AlignmentDirectional.bottomCenter,
@@ -79,7 +76,7 @@ class EditProfileScreen extends StatelessWidget {
                                     image: coverImage == null
                                         ? NetworkImage('${userModel.imgCover}')
                                         : FileImage(coverImage)
-                                    as ImageProvider,
+                                            as ImageProvider,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -108,15 +105,13 @@ class EditProfileScreen extends StatelessWidget {
                             CircleAvatar(
                               radius: 64.0,
                               backgroundColor:
-                              Theme
-                                  .of(context)
-                                  .scaffoldBackgroundColor,
+                                  Theme.of(context).scaffoldBackgroundColor,
                               child: CircleAvatar(
                                 radius: 60.0,
                                 backgroundImage: profileImage != null
                                     ? FileImage(profileImage)
                                     : NetworkImage('${userModel.image}')
-                                as ImageProvider,
+                                        as ImageProvider,
                               ),
                             ),
                             IconButton(
@@ -139,70 +134,55 @@ class EditProfileScreen extends StatelessWidget {
                   const SizedBox(
                     height: 20.0,
                   ),
-                  if (SocialCubit
-                      .get(context)
-                      .profileImage != null ||
-                      SocialCubit
-                          .get(context)
-                          .coverImage != null)
+                  if (SocialCubit.get(context).profileImage != null ||
+                      SocialCubit.get(context).coverImage != null)
                     Row(
                       children: [
-                        if (SocialCubit
-                            .get(context)
-                            .profileImage != null)
+                        if (SocialCubit.get(context).profileImage != null)
                           Expanded(
                               child: Column(
-                                children: [
-                                  defaultButton(
-                                    color: primaryColor,
-                                    text: 'Update Profile',
-                                    function: () {
-                                      SocialCubit.get(context)
-                                          .uploadProfileImage(
-                                          userName: userNameController.text,
-                                          bio: bioController.text);
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  const LinearProgressIndicator(),
-                                ],
-                              )),
+                            children: [
+                              defaultButton(
+                                color: primaryColor,
+                                text: 'Update Profile',
+                                function: () {
+                                  SocialCubit.get(context).uploadProfileImage(
+                                      userName: userNameController.text,
+                                      bio: bioController.text);
+                                },
+                              ),
+                              const SizedBox(
+                                height: 5.0,
+                              ),
+                              const LinearProgressIndicator(),
+                            ],
+                          )),
                         const SizedBox(
                           width: 5.0,
                         ),
-                        if (SocialCubit
-                            .get(context)
-                            .coverImage != null)
+                        if (SocialCubit.get(context).coverImage != null)
                           Expanded(
                               child: Column(
-                                children: [
-                                  defaultButton(
-                                    color: primaryColor,
-                                    text: 'Update Cover',
-                                    function: ()
-                                    {
-                                      SocialCubit.get(context)
-                                          .uploadCoverImage(
-                                          userName: userNameController.text,
-                                          bio: bioController.text);
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: 5.0,
-                                  ),
-                                  const LinearProgressIndicator()
-                                ],
-                              )),
+                            children: [
+                              defaultButton(
+                                color: primaryColor,
+                                text: 'Update Cover',
+                                function: () {
+                                  SocialCubit.get(context).uploadCoverImage(
+                                      userName: userNameController.text,
+                                      bio: bioController.text);
+                                },
+                              ),
+                              const SizedBox(
+                                height: 5.0,
+                              ),
+                              const LinearProgressIndicator()
+                            ],
+                          )),
                       ],
                     ),
-                  if (SocialCubit
-                      .get(context)
-                      .profileImage != null ||
-                      SocialCubit
-                          .get(context)
-                          .coverImage != null)
+                  if (SocialCubit.get(context).profileImage != null ||
+                      SocialCubit.get(context).coverImage != null)
                     const SizedBox(
                       height: 20.0,
                     ),
@@ -226,7 +206,6 @@ class EditProfileScreen extends StatelessWidget {
                         prefixIcon: IconBroken.Edit,
                         labelText: 'Bio'),
                   ),
-
                 ],
               ),
             ),

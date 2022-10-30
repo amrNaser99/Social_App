@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:social_media_recorder/audio_encoder_type.dart';
-import 'package:social_media_recorder/screen/social_media_recorder.dart';
 import 'package:twasol/model/comment_model.dart';
 import 'package:twasol/model/like_post_model.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
@@ -735,9 +733,9 @@ Widget buildPostItem(context,
                         postId: model.postId,
                       );
                       print('onTap show Comments Users');
-                      cubit.loadInAudioCache(
-                        postId: model.postId,
-                      );
+                      // cubit.loadInAudioCache(
+                      //   postId: model.postId,
+                      // );
                     },
                   ),
                 ),

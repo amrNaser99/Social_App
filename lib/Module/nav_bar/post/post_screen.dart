@@ -8,10 +8,9 @@ import 'package:twasol/shared/styles/colors.dart';
 import 'package:twasol/shared/styles/icon_broken.dart';
 
 class PostScreen extends StatelessWidget {
+  final TextEditingController textController = TextEditingController();
 
-  var textController = TextEditingController();
-
-  PostScreen({Key? key}) : super(key: key);
+ PostScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

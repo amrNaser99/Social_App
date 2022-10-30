@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:twasol/Module/edit_profile/edit_profile.dart';
-import 'package:twasol/Module/login/social_login_screen.dart';
 import 'package:twasol/Module/nav_bar/post/post_screen.dart';
 import 'package:twasol/shared/components/components.dart';
 import 'package:twasol/shared/cubit/social_cubit.dart';
 import 'package:twasol/shared/cubit/social_states.dart';
 import 'package:twasol/shared/styles/colors.dart';
 import 'package:twasol/shared/styles/icon_broken.dart';
+
+import '../../auth/login/social_login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -19,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
         const CircularProgressIndicator();
       }
       if (state is SocialSignOutSuccessStates) {
-        showToast(message: 'message', isShort: true);
+        showToast(message: 'Sign out Successfully', isShort: true);
         NavigateTo(context, const SocialLoginScreen());
       }
     }, builder: (context, state) {

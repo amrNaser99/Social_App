@@ -5,8 +5,18 @@ import 'package:twasol/shared/styles/icon_broken.dart';
 import '../../../shared/cubit/social_cubit.dart';
 import '../../../shared/cubit/social_states.dart';
 import '../../../shared/components/components.dart';
+import '../../../shared/styles/colors.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+
   @override
   Widget build(BuildContext context) {
     SocialCubit cubit = BlocProvider.of(context);
@@ -176,7 +186,7 @@ class HomeScreen extends StatelessWidget {
                                   model: SocialCubit.get(context)
                                       .peopleComments[index],
                                   state: state,
-                                  path:  cubit.voicePath ,
+                                  path: cubit.voicePath,
                                 ),
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(

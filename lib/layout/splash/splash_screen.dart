@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../main.dart';
 import '../../Module/onBoarding/onBoarding.dart';
 import '../../shared/components/constants.dart';
+import '../../shared/styles/colors.dart';
 import '../social_layout.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,13 +14,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +35,10 @@ class SplashScreenState extends State<SplashScreen> {
           ),
           title: Text(
             'Twasol',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline4?.copyWith(
+              color: Colors.black,
+              fontWeight: FontWeight.w600,
+            ),
           ),
           durationInSeconds: 1,
           logoSize: 50,
